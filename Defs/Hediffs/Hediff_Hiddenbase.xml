@@ -5,6 +5,8 @@
 		
 		<initialSeverity>.05</initialSeverity>
 
+		<scenarioCanAdd>false</scenarioCanAdd>
+
 		<stages>
 			<li>
 				<minSeverity>.05</minSeverity>
