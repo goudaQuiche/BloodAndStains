@@ -56,31 +56,5 @@
 			</li>
 		</comps>
 	</HediffDef>
-	
-		<!-- red human puddles -->	
-	<HediffDef ParentName="Hediff_HiddenBase">
-		<defName>Hediff_Green_BloodDripping</defName>
-		
-		<hediffClass>HediffWithComps</hediffClass>
-		
-		<description>insectoid blood puddles</description>
-		<label>BloodDripping.greenBlood</label>
-		
-		<comps>
-			<li Class="BloodDripping.HediffCompProperties_BloodDripping">
-				<period>40</period>
-				
-				<puddleMoteDef>
-					<li>Mote_GreenBlood_A</li>
-					<li>Mote_GreenBlood_B</li>
-					<li>Mote_GreenBlood_C</li>
-				</puddleMoteDef>
-
-				<scale>.4~.7</scale>
-				
-				<debug>true</debug>
-			</li>
-		</comps>
-	</HediffDef>
 
 </Defs>

@@ -51,35 +51,5 @@
 			<texPath>Mote/Footprint/Human/Brown_Footprint</texPath>
 		</graphicData>
 	</ThingDef>
-	
-		<!-- red	 -->
-	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_Mantis_Red_Footprint</defName>
-		<graphicData>
-			<texPath>Mote/Footprint/Mantis/Red_Footprint</texPath>
-		</graphicData>
-	</ThingDef>
-	<!-- green	 -->
-	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_Mantis_Green_Footprint</defName>
-		<graphicData>
-			<texPath>Mote/Footprint/Mantis/Green_Footprint</texPath>
-		</graphicData>
-	</ThingDef>
-	<!-- yellow	 -->
-	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_Mantis_Yellow_Footprint</defName>
-		<graphicData>
-			<texPath>Mote/Footprint/Mantis/Yellow_Footprint</texPath>
-		</graphicData>
-	</ThingDef>
-	<!-- brown	 -->
-	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_Mantis_Brown_Footprint</defName>
-		<graphicData>
-			<texPath>Mote/Footprint/Mantis/Brown_Footprint</texPath>
-		</graphicData>
-	</ThingDef>
-		
 
 </Defs>

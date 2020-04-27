@@ -40,27 +40,5 @@
 			</li>
 		</comps>
 	</HediffDef>
-	
-		<!-- mantis footprints -->	
-	<HediffDef ParentName="Hediff_HiddenBase">
-		<defName>Hediff_Mantis_Stain_Footprint</defName>
-		<hediffClass>HediffWithComps</hediffClass>
-
-		<description>mantis footprints</description>
-		<label>Stain_Footprint.mantis</label>
-		
-		<comps>
-			<li Class="BloodDripping.HediffCompProperties_Stain_Footprint">
-				<period>30</period>
-				
-				<mote_HumanBlood_FootprintDef>Mote_Mantis_Red_Footprint</mote_HumanBlood_FootprintDef>
-				<mote_InsectBlood_FootprintDef>Mote_Mantis_Green_Footprint</mote_InsectBlood_FootprintDef>
-				<mote_Vomit_FootprintDef>Mote_Mantis_Yellow_Footprint</mote_Vomit_FootprintDef>
-				<mote_Filth_FootprintDef>Mote_Mantis_Brown_Footprint</mote_Filth_FootprintDef>
-				
-				<debug>true</debug>
-			</li>
-		</comps>
-	</HediffDef>
 		
 </Defs>
