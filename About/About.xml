@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Blood dripping src</name>
+	<author>Gouda quiche</author>
+	<url>https://github.com/goudaQuiche</url>
+	<supportedVersions>
+			<li>1.1</li>
+	</supportedVersions>
+	<packageId>goudaquiche.BloodDripping.src</packageId>
+	
+	<description>Adds Blood puddle and footprints motes when a pawn is bleeding.
+
+Thanks to:
+- Hauvega for developing the idea and encouraging me by doing so.</description>
+
+</ModMetaData>

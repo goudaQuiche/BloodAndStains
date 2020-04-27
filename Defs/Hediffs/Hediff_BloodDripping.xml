@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!--uncolored puddles, need race.bloodDef.color-->	
+	<!--
+	<HediffDef ParentName="Hediff_HiddenBase">
+		<defName>Hediff_ColorizedBloodDripping</defName>
+		
+		<hediffClass>HediffWithComps</hediffClass>
+		
+		<description>colorized blood puddles</description>
+		<label>BloodDripping.colBlood</label>
+		
+		<comps>
+			<li Class="BloodDripping.HediffCompProperties_BloodDripping">
+				<period>40</period>
+				
+				<puddleMoteDef>
+					<li>Mote_PuddleA</li>
+					<li>Mote_PuddleB</li>
+					<li>Mote_PuddleC</li>
+				</puddleMoteDef>
+				
+				
+				<raceProportionnalPuddleSize>true</raceProportionnalPuddleSize>
+				<raceBloodDefColor>true</raceBloodDefColor>
+				<randomScaleRange>.6~.9</randomScaleRange>
+				
+			</li>
+		</comps>
+	</HediffDef>
+	-->
+
+	<!-- red human puddles -->	
+	<HediffDef ParentName="Hediff_HiddenBase">
+		<defName>Hediff_Red_BloodDripping</defName>
+		
+		<hediffClass>HediffWithComps</hediffClass>
+		
+		<description>human blood puddles</description>
+		<label>BloodDripping.redBlood</label>
+		
+		<comps>
+			<li Class="BloodDripping.HediffCompProperties_BloodDripping">
+				<period>40</period>
+				
+				<puddleMoteDef>
+					<li>Mote_RedBlood_A</li>
+					<li>Mote_RedBlood_B</li>
+					<li>Mote_RedBlood_C</li>
+				</puddleMoteDef>
+
+				<scale>.4~.7</scale>
+				
+				<debug>true</debug>
+			</li>
+		</comps>
+	</HediffDef>
+	
+		<!-- red human puddles -->	
+	<HediffDef ParentName="Hediff_HiddenBase">
+		<defName>Hediff_Green_BloodDripping</defName>
+		
+		<hediffClass>HediffWithComps</hediffClass>
+		
+		<description>insectoid blood puddles</description>
+		<label>BloodDripping.greenBlood</label>
+		
+		<comps>
+			<li Class="BloodDripping.HediffCompProperties_BloodDripping">
+				<period>40</period>
+				
+				<puddleMoteDef>
+					<li>Mote_GreenBlood_A</li>
+					<li>Mote_GreenBlood_B</li>
+					<li>Mote_GreenBlood_C</li>
+				</puddleMoteDef>
+
+				<scale>.4~.7</scale>
+				
+				<debug>true</debug>
+			</li>
+		</comps>
+	</HediffDef>
+
+</Defs>

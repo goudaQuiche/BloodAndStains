@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	
+	<ThingDef Name="PuddleBase" ParentName="MoteBase">
+		<defName>PuddleBase</defName>
+		<graphicData>
+			<texPath>NullTex</texPath>
+		</graphicData>
+		<altitudeLayer>MoteLow</altitudeLayer>
+		<mote>
+			<fadeInTime>0.08</fadeInTime>
+			<solidTime>.8</solidTime>
+			<fadeOutTime>1.2</fadeOutTime>
+		</mote>
+	</ThingDef>
+	
+	<!-- uncolorized	 -->
+	<!--
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_PuddleA</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/PuddleA</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_PuddleB</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/PuddleB</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_PuddleC</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/PuddleC</texPath>
+		</graphicData>
+	</ThingDef>
+	-->
+	
+	<!-- red	 -->
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_RedBlood_A</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Red/PuddleRA</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_RedBlood_B</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Red/PuddleRB</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_RedBlood_C</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Red/PuddleRC</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<!-- green	 -->
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_GreenBlood_A</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Green/PuddleGA</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_GreenBlood_B</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Green/PuddleGB</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_GreenBlood_C</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Green/PuddleGC</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<!-- purple -->
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_PurpleBlood_A</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Purple/PuddlePA</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_PurpleBlood_B</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Purple/PuddlePB</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<ThingDef ParentName="PuddleBase">
+		<defName>Mote_PurpleBlood_C</defName>
+		<graphicData>
+			<texPath>Mote/Puddle/Purple/PuddlePC</texPath>
+		</graphicData>
+	</ThingDef>
+	
+	
+
+</Defs>

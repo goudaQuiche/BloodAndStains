@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	
+	<ThingDef Name="FootprintBase" ParentName="MoteBase">
+		<defName>FootprintBase</defName>
+		<graphicData>
+			<texPath>NullTex</texPath>
+		</graphicData>
+		<altitudeLayer>MoteLow</altitudeLayer>
+		<mote>
+			<fadeInTime>0.08</fadeInTime>
+			<solidTime>1</solidTime>
+			<fadeOutTime>2</fadeOutTime>
+		</mote>
+	</ThingDef>
+
+	<!-- need colorized	 -->
+	<!--
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_ColorizedFootprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	-->
+	<!-- red	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Red_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Red_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	<!-- green	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Green_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Green_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	<!-- yellow	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Yellow_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Yellow_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	<!-- brown	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Brown_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Brown_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
+		<!-- red	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Mantis_Red_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Mantis/Red_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	<!-- green	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Mantis_Green_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Mantis/Green_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	<!-- yellow	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Mantis_Yellow_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Mantis/Yellow_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	<!-- brown	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Mantis_Brown_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Mantis/Brown_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+		
+
+</Defs>
