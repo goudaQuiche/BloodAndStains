@@ -34,7 +34,9 @@ namespace BloodDripping
         //private Job oldJob = null;
 
         //60 = 1 sec
-        private int CheckEveryXTicks = 90;
+        private readonly int CheckEveryXTicks = 90;
+
+        float PuddleSizeMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().PuddleSizeMultiplier;
 
         public HediffCompProperties_BloodDripping Props
         {
@@ -53,7 +55,8 @@ namespace BloodDripping
         {
             TerrainDef terrain = myPawn.Position.GetTerrain(myMap);
             //return (terrain == null || terrain.IsWater || myPawn.Map.snowGrid.GetDepth(myPawn.Position) >= 0.4f);
-            return !(terrain == null || terrain.IsWater);
+            //return !(terrain == null || terrain.IsWater);
+            return !(terrain == null);
         }
 
         public bool IsBleeding
@@ -70,7 +73,7 @@ namespace BloodDripping
             bleedRateTotal = myPawn.health.hediffSet.BleedRateTotal;
             //=(1-EXP(-A10/2))*2
 
-            bleedingScale = (1 - (float)Math.Exp(-bleedRateTotal/6))*2.5f;
+            bleedingScale = (1 - (float)Math.Exp(-bleedRateTotal / 6)) * 3f;
 
             if (bleedRateTotal == 0)
             {
@@ -195,22 +198,28 @@ namespace BloodDripping
             moteThrown.Scale = scale;
             moteThrown.exactRotation = rot;
             moteThrown.exactPosition = loc;
+            
             GenSpawn.Spawn(moteThrown, loc.ToIntVec3(), map, WipeMode.Vanish);
         }
 
         private float PuddleSize()
         {
-            if(myPawn.BodySize > 0)
-                return Props.randomScale.RandomInRange * bleedingScale * myPawn.BodySize * myPawn.GetBloodPumping();
+            float answer = Props.randomScale.RandomInRange * bleedingScale * myPawn.GetBloodPumping() * PuddleSizeMultiplier;
 
-            return Props.randomScale.RandomInRange * bleedingScale * myPawn.GetBloodPumping();
+            if (myPawn.BodySize > 0)
+                return (answer * myPawn.BodySize);
+
+            return answer;
         }
 
         private void TryPlaceMote()
         {
             Vector3 drawPos = myPawn.Drawer.DrawPos;
             Vector3 normalized = drawPos.normalized;
-            float rot = normalized.AngleFlat() + Props.randomRotation.RandomInRange;
+            float rot = normalized.AngleFlat();
+
+            if(!myPawn.IsLaying())
+                rot += Props.randomRotation.RandomInRange;
 
             Vector3 vector = drawPos;
             if (!myPawn.IsLaying())

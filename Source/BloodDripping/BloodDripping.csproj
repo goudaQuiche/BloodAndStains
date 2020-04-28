@@ -67,6 +67,7 @@
     <Compile Include="Comp\HediffComp_Stain_Footprint.cs" />
     <Compile Include="HediffGiveHuman\Human_HediffGiver_BloodDripping.cs" />
     <Compile Include="HediffGiveHuman\Human_HediffGiver_Stain_Footprint.cs" />
+    <Compile Include="ModSettings.cs" />
     <Compile Include="MyDefs.cs" />
     <Compile Include="MyGfx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

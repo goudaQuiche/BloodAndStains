@@ -29,10 +29,13 @@ namespace BloodDripping
         private int ticksUntilFootPrint;
         private int footPrintTicksLeft;
         private int stainedLengthTicks;
-        private readonly int StainedTicksLimit = 10000;
-        private int LengthPerBloodFilth = 1000;
+        public static readonly int StainedTicksLimit = 1800;
+        public static readonly int LengthPerBloodFilth = 300;
 
         private IntVec3 lastCell;
+
+        int FilthPerSteppedInItMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().FilthPerSteppedInItMultiplier;
+        int MaxFilthCarriedMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().MaxFilthCarriedMultiplier;
 
         public HediffCompProperties_Stain_Footprint Props
         {
@@ -101,18 +104,17 @@ namespace BloodDripping
             for (int i = 0; i < thingList.Count; i++)
             {
                 Thing curT = thingList[i];
-                /*
-                if (!curT.def.IsWithinCategory(MyDefs.FilthCategoryDef))
+                
+                if (curT.def.category != ThingCategory.Filth)
                     continue;
-                */
-
+                
                 foreach (Footprint curFP in Props.footprint)
                 {
                     foreach(ThingDef curFilth in curFP.triggerOnFilthDef)
                     {
                         if(curT.def == curFilth)
                         {
-                            stainedLengthTicks += LengthPerBloodFilth;
+                            stainedLengthTicks += LengthPerBloodFilth * FilthPerSteppedInItMultiplier;
                             moteFootprintDef = curFP.moteDef;
                             break;
                         }
@@ -120,8 +122,9 @@ namespace BloodDripping
                 }
             }
 
-            if (stainedLengthTicks > StainedTicksLimit)
-                stainedLengthTicks = StainedTicksLimit;
+            // Capping the ticks
+            /* if (stainedLengthTicks > StainedTicksLimit)  stainedLengthTicks = StainedTicksLimit; */
+            stainedLengthTicks = Math.Min(stainedLengthTicks, StainedTicksLimit * MaxFilthCarriedMultiplier);
 
         }
 
@@ -158,12 +161,18 @@ namespace BloodDripping
                 }
             }
 
-            ticksUntilFootPrint = (int)(Props.period / (myPawn.GetStatValue(StatDefOf.MoveSpeed) / MyDefs.HumanSpeed));
+            if (myPawn.GetStatValue(StatDefOf.MoveSpeed) < MyDefs.HumanSpeed)
+                ticksUntilFootPrint = Props.period;
+            else
+                ticksUntilFootPrint = (int)(Props.period / (myPawn.GetStatValue(StatDefOf.MoveSpeed) / MyDefs.HumanSpeed));
+
             lastCell = myPawn.Position;
         }
         void Reset()
         {
             footPrintTicksLeft = ticksUntilFootPrint;
+            if (myPawn.Drafted)
+                footPrintTicksLeft /= 2;
         }
 
         public static void PlaceFootprint(Vector3 loc, Map map, float rot, ThingDef Mote_FootprintDef)
