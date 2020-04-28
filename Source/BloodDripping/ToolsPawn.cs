@@ -26,7 +26,7 @@ namespace BloodDripping
 
         public static bool Has_Human_Stain_Footprint(this Pawn pawn)
         {
-            return pawn.health.hediffSet.HasHediff(MyDefs.Human_Human_Stain_Footprint_HediffDef);
+            return pawn.health.hediffSet.HasHediff(MyDefs.Human_Stain_Footprint_HediffDef);
         }
 
         public static bool Has_Human_BloodDripping(this Pawn pawn)

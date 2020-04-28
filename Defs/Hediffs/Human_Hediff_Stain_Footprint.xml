@@ -31,12 +31,38 @@
 			<li Class="BloodDripping.HediffCompProperties_Stain_Footprint">
 				<period>30</period>
 				
-				<mote_HumanBlood_FootprintDef>Mote_Human_Red_Footprint</mote_HumanBlood_FootprintDef>
-				<mote_InsectBlood_FootprintDef>Mote_Human_Green_Footprint</mote_InsectBlood_FootprintDef>
-				<mote_Vomit_FootprintDef>Mote_Human_Yellow_Footprint</mote_Vomit_FootprintDef>
-				<mote_Filth_FootprintDef>Mote_Human_Brown_Footprint</mote_Filth_FootprintDef>
+				<footprint>
+					<li>
+						<defName>red_fluid</defName>
+						<triggerOnFilthDef>
+							<li>Filth_Blood</li>
+						</triggerOnFilthDef>
+						<moteDef>Mote_Human_Red_Footprint</moteDef>
+					</li>
+					<li>
+						<defName>green_fluid</defName>
+						<triggerOnFilthDef>
+							<li>Filth_BloodInsect</li>
+						</triggerOnFilthDef>
+						<moteDef>Mote_Human_Green_Footprint</moteDef>
+					</li>
+					<li>
+						<defName>yellow_fluid</defName>
+						<triggerOnFilthDef>
+							<li>Filth_Vomit</li>
+						</triggerOnFilthDef>
+						<moteDef>Mote_Human_Yellow_Footprint</moteDef>
+					</li>
+					<li>
+						<defName>brown_fluid</defName>
+						<triggerOnFilthDef>
+							<li>Filth_AnimalFilth</li>
+						</triggerOnFilthDef>
+						<moteDef>Mote_Human_Brown_Footprint</moteDef>
+					</li>
+				</footprint>
 				
-				<debug>true</debug>
+				<!-- <debug>true</debug> -->
 			</li>
 		</comps>
 	</HediffDef>

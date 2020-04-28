@@ -20,7 +20,7 @@ namespace BloodDripping
         List <ThingDef> puddleMoteDef = null;
         private Vector3 lastPuddlePlacePos;
         //private static readonly Vector3 BloodPuddleOffset = new Vector3(0f, 0f, -0.3f);
-        private static readonly Vector3 StandingOffset = new Vector3(0f, 0f, -0.5f);
+        private static readonly Vector3 StandingOffset = new Vector3(0f, 0f, -0.7f);
         //private static readonly Vector3 Downedffset = new Vector3(0f, 0f, 0);
 
         private int ticksUntilPuddle = 500;
@@ -68,7 +68,10 @@ namespace BloodDripping
         {
 
             bleedRateTotal = myPawn.health.hediffSet.BleedRateTotal;
-            bleedingScale = bleedRateTotal * .75f;
+            //=(1-EXP(-A10/2))*2
+
+            bleedingScale = (1 - (float)Math.Exp(-bleedRateTotal/6))*2.5f;
+
             if (bleedRateTotal == 0)
             {
                 Tools.Warn(
@@ -76,13 +79,13 @@ namespace BloodDripping
                     "\nShould not happen since HasHediff(HediffDefOf.BloodLoss)", Props.debug);
                 return;
             }
-            ticksUntilPuddle = (int)(Props.period / bleedRateTotal);
 
+            ticksUntilPuddle = (int)(Props.period / bleedRateTotal);
             if (myPawn.IsLaying())
             {
-                layingTicks++;
-                if (layingTicks > layingTicksLimit)
-                    layingTicks = layingTicksLimit;
+                layingTicks += 15;
+                // if layingTicks over limit, then limit
+                layingTicks = Math.Min(layingTicks, layingTicksLimit);
 
                 layingFactor = (float)layingTicks / (float)layingTicksLimit;
 
@@ -93,6 +96,10 @@ namespace BloodDripping
             {
                 layingTicks = 0;
             }
+            // if ticksUntil over limit, then maxlimit
+            ticksUntilPuddle = Math.Min(ticksUntilPuddle, Props.maxPeriod);
+            // if ticksUntil under limit, then minlimit
+            ticksUntilPuddle = Math.Max(ticksUntilPuddle, Props.minPeriod);
 
             Tools.Warn(
                 "New bleed rate: " + bleedRateTotal +
@@ -109,7 +116,7 @@ namespace BloodDripping
             {
                 if (TerrainAllowsPuddle(myPawn))
                 {
-                    Tools.Warn("Trying to place bloody puddle", Props.debug);
+                    //Tools.Warn(myPawn.LabelShort + " trying to place bloody puddle", Props.debug);
                     TryPlaceMote();
                 }
 
@@ -126,17 +133,18 @@ namespace BloodDripping
 
         public override void CompPostTick(ref float severityAdjustment)
         {
-            if (myMap.moteCounter.SaturatedLowPriority)
-                return;
+            if (myPawn == null)
+                Init();
 
-            if (myPawn == null || !myPawn.Spawned)
+            if (myMap.moteCounter.SaturatedLowPriority)
             {
-                Tools.Warn("pawn null", Props.debug);
+                Tools.Warn(myPawn?.LabelShort + "mote Counter Saturated", Props.debug);
                 return;
             }
-            if (myPawn.Map == null)
+
+            if (!myPawn.Spawned)
             {
-                //Tools.Warn(myPawn.Label + " - pawn.Map null", myDebug);
+                Tools.Warn("pawn unspawned", Props.debug);
                 return;
             }
 
@@ -153,8 +161,15 @@ namespace BloodDripping
 
         public void Init()
         {
+            Tools.Warn("Entering Init", Props.debug);
             myPawn = parent.pawn;
             myMap = myPawn.Map;
+
+            if(myPawn == null || myMap == null)
+            {
+                Tools.Warn("Null pawn or map", Props.debug);
+                parent.Severity = 0;
+            }
 
             if (Props.puddleMoteDef.NullOrEmpty())
             {
@@ -185,21 +200,23 @@ namespace BloodDripping
 
         private float PuddleSize()
         {
-            //return Props.scale.RandomInRange * bleedingScale * myPawn.BodySize * myPawn.GetBloodPumping();
-            return Props.scale.RandomInRange * bleedingScale * myPawn.GetBloodPumping();
+            if(myPawn.BodySize > 0)
+                return Props.randomScale.RandomInRange * bleedingScale * myPawn.BodySize * myPawn.GetBloodPumping();
+
+            return Props.randomScale.RandomInRange * bleedingScale * myPawn.GetBloodPumping();
         }
 
         private void TryPlaceMote()
         {
-
             Vector3 drawPos = myPawn.Drawer.DrawPos;
             Vector3 normalized = drawPos.normalized;
-            float rot = normalized.AngleFlat();
+            float rot = normalized.AngleFlat() + Props.randomRotation.RandomInRange;
 
             Vector3 vector = drawPos;
             if (!myPawn.IsLaying())
                 vector += StandingOffset;
 
+            Tools.Warn(myPawn.LabelShort+" rot: "+rot, Props.debug);
             IntVec3 c = vector.ToIntVec3();
             if (c.InBounds(myMap))
             {
@@ -221,12 +238,15 @@ namespace BloodDripping
                 {
                     if (Props.debug)
                     {
-                        result += "Bleeding rate: " + bleedRateTotal
+                        result +=
+                            " moteSaturated: " + myMap.moteCounter.SaturatedLowPriority + "\n------"
                             + "\n ticks: " + puddleTicksLeft + "/" + ticksUntilPuddle
-                            + "\n bleedingScale: " + bleedingScale
+                            + "\n Bleeding rate: " + bleedRateTotal
                             + "\n layingFactor: " + layingFactor
-                            //+ "\n BodySize: "+ myPawn.BodySize
+                            + "\n BodySize: "+ myPawn?.BodySize
                             + "\n BloodPumping: " + myPawn.GetBloodPumping()
+                            + "\n---------->"
+                            + "\n bleedingScale: " + bleedingScale
                            ;
                     }
                 }

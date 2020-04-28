@@ -57,19 +57,21 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HediffGiver\CustomRace_HediffGiver_BloodDripping.cs" />
-    <Compile Include="HediffGiver\CustomRace_HediffGiver_Stain_Footprint.cs" />
+    <Compile Include="Footprint.cs" />
+    <Compile Include="HediffGiverCustomRace\CustomRace_HediffGiver_BloodDripping.cs" />
+    <Compile Include="HediffGiverCustomRace\CustomRace_HediffGiver_Stain_Footprint.cs" />
     <Compile Include="GfxEffects.cs" />
     <Compile Include="CompProperties\HediffCompProperties_BloodDripping.cs" />
     <Compile Include="CompProperties\HediffCompProperties_Stain_Footprint.cs" />
-    <Compile Include="HediffComp_BloodDripping.cs" />
-    <Compile Include="HediffComp_Stain_Footprint.cs" />
-    <Compile Include="HediffGiver\Human_HediffGiver_BloodDripping.cs" />
-    <Compile Include="HediffGiver\Human_HediffGiver_Stain_Footprint.cs" />
+    <Compile Include="Comp\HediffComp_BloodDripping.cs" />
+    <Compile Include="Comp\HediffComp_Stain_Footprint.cs" />
+    <Compile Include="HediffGiveHuman\Human_HediffGiver_BloodDripping.cs" />
+    <Compile Include="HediffGiveHuman\Human_HediffGiver_Stain_Footprint.cs" />
     <Compile Include="MyDefs.cs" />
     <Compile Include="MyGfx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="ToolsComp.cs" />
     <Compile Include="ToolsJob.cs" />
     <Compile Include="ToolsPawn.cs" />
   </ItemGroup>

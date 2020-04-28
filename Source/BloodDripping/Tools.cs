@@ -12,6 +12,7 @@ namespace BloodDripping
         {
             return ((pawn != null) && (pawn.Map != null));
         }
+
         public static void Warn(string warning, bool debug = false)
         {
             if(debug)

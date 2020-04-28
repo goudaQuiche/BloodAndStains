@@ -43,6 +43,8 @@
 		<comps>
 			<li Class="BloodDripping.HediffCompProperties_BloodDripping">
 				<period>40</period>
+				<minPeriod>30</minPeriod>
+				<maxPeriod>80</maxPeriod>
 				
 				<puddleMoteDef>
 					<li>Mote_RedBlood_A</li>
@@ -50,9 +52,10 @@
 					<li>Mote_RedBlood_C</li>
 				</puddleMoteDef>
 
-				<scale>.4~.7</scale>
+				<randomScale>.6~.75</randomScale>
+				<randomRotation>-15~15</randomRotation>
 				
-				<debug>true</debug>
+				<!-- <debug>true</debug> -->
 			</li>
 		</comps>
 	</HediffDef>

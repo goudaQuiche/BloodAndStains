@@ -28,8 +28,8 @@ namespace BloodDripping
 
         private int ticksUntilFootPrint;
         private int footPrintTicksLeft;
-        private int BloodStainedLengthTicks;
-        private readonly int BloodStainedLimit = 10000;
+        private int stainedLengthTicks;
+        private readonly int StainedTicksLimit = 10000;
         private int LengthPerBloodFilth = 1000;
 
         private IntVec3 lastCell;
@@ -49,33 +49,39 @@ namespace BloodDripping
 
         public override void CompPostTick(ref float severityAdjustment)
         {
+            if (myPawn == null)
+                Init();
+
             if (myMap.moteCounter.SaturatedLowPriority)
-                return;
-
-            if (myPawn == null || !myPawn.Spawned)
             {
-                //Tools.Warn("pawn null", Props.debug);
+                Tools.Warn(myPawn?.LabelShort + "mote Counter Saturated", Props.debug);
                 return;
             }
-            if (myPawn.Map == null)
+            if (!myPawn.Spawned)
             {
-                //Tools.Warn(myPawn.Label + " - pawn.Map null", myDebug);
+                Tools.Warn("unspawned pawn", Props.debug);
                 return;
             }
 
-            if(myPawn.IsLaying())
+            if (myPawn.IsLaying())
+            {
+                Tools.Warn(myPawn.LabelShort + " is laying, wont footprint", Props.debug);
                 return;
+            }
 
-            CellScan();
+            if (myPawn.Position == lastCell)
+                CellScan();
 
-            if (!IsBloodStained)
+            lastCell = myPawn.Position;
+
+            if (!IsStained)
                 return;
 
             if (footPrintTicksLeft <= 0)
             {
                 if (TerrainAllowsPuddle(myPawn))
                 {
-                    Tools.Warn("Trying to place bloody foot print", Props.debug);
+                    Tools.Warn(myPawn.LabelShort + " trying to place bloody foot print", Props.debug);
                     TryPlaceFootprint();
                 }
 
@@ -86,14 +92,11 @@ namespace BloodDripping
             {
                 footPrintTicksLeft--;
             }
-            BloodStainedLengthTicks--;
+            stainedLengthTicks--;
 
         }
         private void CellScan()
         {
-            if (myPawn.Position == lastCell)
-                return;
-
             List<Thing> thingList = myPawn.Position.GetThingList(myMap);
             for (int i = 0; i < thingList.Count; i++)
             {
@@ -103,33 +106,23 @@ namespace BloodDripping
                     continue;
                 */
 
-                if (curT.def.defName == "Filth_Blood")
+                foreach (Footprint curFP in Props.footprint)
                 {
-                    BloodStainedLengthTicks += LengthPerBloodFilth;
-                    moteFootprintDef = Props.mote_HumanBlood_FootprintDef;
-                    break;
-                }else if (curT.def.defName == "Filth_BloodInsect"){
-                    BloodStainedLengthTicks += LengthPerBloodFilth;
-                    moteFootprintDef = Props.mote_InsectBlood_FootprintDef;
-                    break;
-                }
-                else if (curT.def.defName == "Filth_Vomit")
-                {
-                    BloodStainedLengthTicks += LengthPerBloodFilth;
-                    moteFootprintDef = Props.mote_Vomit_FootprintDef;
-                    break;
-                }else if (curT.def.defName == "Filth_AnimalFilth")
-                {
-                    BloodStainedLengthTicks += LengthPerBloodFilth;
-                    moteFootprintDef = Props.mote_Filth_FootprintDef;
-                    break;
+                    foreach(ThingDef curFilth in curFP.triggerOnFilthDef)
+                    {
+                        if(curT.def == curFilth)
+                        {
+                            stainedLengthTicks += LengthPerBloodFilth;
+                            moteFootprintDef = curFP.moteDef;
+                            break;
+                        }
+                    }
                 }
             }
 
-            if (BloodStainedLengthTicks > BloodStainedLimit)
-                BloodStainedLengthTicks = BloodStainedLimit;
+            if (stainedLengthTicks > StainedTicksLimit)
+                stainedLengthTicks = StainedTicksLimit;
 
-            lastCell = myPawn.Position;
         }
 
         public bool TerrainAllowsPuddle(Pawn pawn)
@@ -138,11 +131,11 @@ namespace BloodDripping
             //return (terrain == null || terrain.IsWater || myPawn.Map.snowGrid.GetDepth(myPawn.Position) >= 0.4f);
             return !(terrain == null || terrain.IsWater);
         }
-        private bool IsBloodStained
+        private bool IsStained
         {
             get
             {
-                return (BloodStainedLengthTicks > 0);
+                return (stainedLengthTicks > 0);
             }
         }
         public void Init()
@@ -150,18 +143,23 @@ namespace BloodDripping
             myPawn = parent.pawn;
             myMap = myPawn.Map;
 
-            if ((Props.mote_Filth_FootprintDef == null) || (Props.mote_InsectBlood_FootprintDef == null) || (Props.mote_HumanBlood_FootprintDef == null) || (Props.mote_Vomit_FootprintDef == null))
+            if (Props.footprint.NullOrEmpty())
             {
-                Tools.Warn("no moteFootprintDef found, destroying hediff", Props.debug);
+                Tools.Warn("no Footprint Def found, destroying hediff", Props.debug);
                 parent.Severity = 0;
             }
 
-            //moteFootprintDef = Props.mote_HumanBlood_FootprintDef;
-            ticksUntilFootPrint = Props.period;
+            foreach(Footprint curFP in Props.footprint)
+            {
+                if (curFP.triggerOnFilthDef.NullOrEmpty())
+                {
+                    Tools.Warn("no Filth Def found in "+ curFP.defName, Props.debug);
+                    parent.Severity = 0;
+                }
+            }
 
+            ticksUntilFootPrint = (int)(Props.period / (myPawn.GetStatValue(StatDefOf.MoveSpeed) / MyDefs.HumanSpeed));
             lastCell = myPawn.Position;
-
-            
         }
         void Reset()
         {
@@ -211,10 +209,14 @@ namespace BloodDripping
                 {
                     if (Props.debug)
                     {
-                        result += "IsBloodStained: " + IsBloodStained +
-                            "\n BloodStainedLengthTicks: " + BloodStainedLengthTicks +
-                            "\n Ticks: " + footPrintTicksLeft + "/" + ticksUntilFootPrint +
-                            "\n MoteFootprint: " + moteFootprintDef?.defName;
+                        result += "IsBloodStained: " + IsStained
+                        + "\n moteSaturated" + myMap.moteCounter.SaturatedLowPriority;
+
+                        if (IsStained)
+                            result +=
+                            "\n BloodStainedLengthTicks: " + stainedLengthTicks
+                            + "\n Ticks: " + footPrintTicksLeft + "/" + ticksUntilFootPrint
+                            + "\n MoteFootprint: " + moteFootprintDef?.defName;
                     }
                 }
                 return result;

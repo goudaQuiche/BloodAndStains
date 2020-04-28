@@ -14,10 +14,15 @@ namespace BloodDripping
 {
     public class HediffCompProperties_BloodDripping : HediffCompProperties
     {
+        public int period;
+        public int minPeriod;
+        public int maxPeriod;
 
-        public int period = 15;
+        public string race;
+
         public List <ThingDef> puddleMoteDef;
-        public FloatRange scale = new FloatRange(.5f, .8f);
+        public FloatRange randomScale;
+        public FloatRange randomRotation;
 
         public bool debug = false;
 
