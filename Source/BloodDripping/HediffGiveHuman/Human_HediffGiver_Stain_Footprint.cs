@@ -14,7 +14,7 @@ namespace BloodDripping
 
             if (flag)
             {
-                Tools.Warn("Applying blood footprint on " + pawn.LabelShort, true);
+                //Tools.Warn("Applying blood footprint on " + pawn.LabelShort, true);
                 HealthUtility.AdjustSeverity(pawn, this.hediff, .1f);
             }
         }

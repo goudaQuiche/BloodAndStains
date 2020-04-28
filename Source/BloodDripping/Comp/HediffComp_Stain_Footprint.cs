@@ -37,6 +37,8 @@ namespace BloodDripping
         int FilthPerSteppedInItMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().FilthPerSteppedInItMultiplier;
         int MaxFilthCarriedMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().MaxFilthCarriedMultiplier;
 
+        bool shouldSkip = false;
+
         public HediffCompProperties_Stain_Footprint Props
         {
             get
@@ -54,6 +56,10 @@ namespace BloodDripping
         {
             if (myPawn == null)
                 Init();
+
+            if (shouldSkip)
+                return;
+
 
             if (myMap.moteCounter.SaturatedLowPriority)
             {
@@ -146,10 +152,20 @@ namespace BloodDripping
             myPawn = parent.pawn;
             myMap = myPawn.Map;
 
+            if (myMap == null)
+            {
+                Tools.Warn("pawn is not on map anymore", Props.debug);
+                parent.Severity = 0;
+                shouldSkip = true;
+                return;
+            }
+
             if (Props.footprint.NullOrEmpty())
             {
                 Tools.Warn("no Footprint Def found, destroying hediff", Props.debug);
                 parent.Severity = 0;
+                shouldSkip = true;
+                return;
             }
 
             foreach(Footprint curFP in Props.footprint)
@@ -158,6 +174,8 @@ namespace BloodDripping
                 {
                     Tools.Warn("no Filth Def found in "+ curFP.defName, Props.debug);
                     parent.Severity = 0;
+                    shouldSkip = true;
+                    return;
                 }
             }
 

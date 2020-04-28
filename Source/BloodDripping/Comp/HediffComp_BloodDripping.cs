@@ -31,12 +31,13 @@ namespace BloodDripping
         private int layingTicks;
         private int layingTicksLimit = 1800;
         private float layingFactor;
-        //private Job oldJob = null;
 
         //60 = 1 sec
         private readonly int CheckEveryXTicks = 90;
 
         float PuddleSizeMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().PuddleSizeMultiplier;
+
+        bool shouldSkip = false;
 
         public HediffCompProperties_BloodDripping Props
         {
@@ -139,6 +140,9 @@ namespace BloodDripping
             if (myPawn == null)
                 Init();
 
+            if (shouldSkip)
+                return;
+
             if (myMap.moteCounter.SaturatedLowPriority)
             {
                 Tools.Warn(myPawn?.LabelShort + "mote Counter Saturated", Props.debug);
@@ -172,12 +176,16 @@ namespace BloodDripping
             {
                 Tools.Warn("Null pawn or map", Props.debug);
                 parent.Severity = 0;
+                shouldSkip = true;
+                return;
             }
 
             if (Props.puddleMoteDef.NullOrEmpty())
             {
                 Tools.Warn("no Props.puddleMoteDef found, destroying hediff", Props.debug);
                 parent.Severity = 0;
+                shouldSkip = true;
+                return;
             }
                 
             puddleMoteDef = Props.puddleMoteDef;
