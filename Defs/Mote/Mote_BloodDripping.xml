@@ -11,6 +11,7 @@
 			<fadeInTime>0.08</fadeInTime>
 			<solidTime>.8</solidTime>
 			<fadeOutTime>1.2</fadeOutTime>
+			<growthRate>0.2</growthRate>
 		</mote>
 	</ThingDef>
 	
