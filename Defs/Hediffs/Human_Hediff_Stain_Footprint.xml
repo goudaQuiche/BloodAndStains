@@ -22,6 +22,7 @@
 	<!-- human footprints -->	
 	<HediffDef ParentName="Hediff_HiddenBase">
 		<defName>Hediff_Human_Stain_Footprint</defName>
+		<!-- <defName>Hediff_Human_Stain_Footprint</defName> -->
 		<hediffClass>HediffWithComps</hediffClass>
 
 		<description>human footprints</description>

@@ -57,6 +57,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DeathWorker\DeathActionWorker_BloodPuddle.cs" />
     <Compile Include="Footprint.cs" />
     <Compile Include="HediffGiverCustomRace\CustomRace_HediffGiver_BloodDripping.cs" />
     <Compile Include="HediffGiverCustomRace\CustomRace_HediffGiver_Stain_Footprint.cs" />
@@ -65,8 +66,8 @@
     <Compile Include="CompProperties\HediffCompProperties_Stain_Footprint.cs" />
     <Compile Include="Comp\HediffComp_BloodDripping.cs" />
     <Compile Include="Comp\HediffComp_Stain_Footprint.cs" />
-    <Compile Include="HediffGiveHuman\Human_HediffGiver_BloodDripping.cs" />
-    <Compile Include="HediffGiveHuman\Human_HediffGiver_Stain_Footprint.cs" />
+    <Compile Include="HediffGiverHuman\Human_HediffGiver_BloodDripping.cs" />
+    <Compile Include="HediffGiverHuman\Human_HediffGiver_Stain_Footprint.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="MyDefs.cs" />
     <Compile Include="MyGfx.cs" />
@@ -85,6 +86,7 @@
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>

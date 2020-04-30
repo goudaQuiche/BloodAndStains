@@ -34,6 +34,7 @@
 	<!-- red human puddles -->	
 	<HediffDef ParentName="Hediff_HiddenBase">
 		<defName>Hediff_Red_BloodDripping</defName>
+		<!-- <defName>BNS_Hediff_BloodDripping_Red</defName> -->
 		
 		<hediffClass>HediffWithComps</hediffClass>
 		
@@ -47,13 +48,19 @@
 				<maxPeriod>80</maxPeriod>
 				
 				<puddleMoteDef>
-					<li>Mote_RedBlood_A</li>
-					<li>Mote_RedBlood_B</li>
-					<li>Mote_RedBlood_C</li>
+					<li>BNS_Mote_Blood_RA</li>
+					<li>BNS_Mote_Blood_RB</li>
+					<li>BNS_Mote_Blood_RC</li>
+					<li>BNS_Mote_Blood_RD</li>
+					<li>BNS_Mote_Blood_RE</li>
+					<li>BNS_Mote_Blood_RF</li>
+					<li>BNS_Mote_Blood_RG</li>
 				</puddleMoteDef>
 
 				<randomScale>.6~.75</randomScale>
 				<randomRotation>-15~15</randomRotation>
+				
+				<deathPuddleMoteContainsString>BNS_Mote_DeathPuddle_R</deathPuddleMoteContainsString>
 				
 				<!-- <debug>true</debug> -->
 			</li>

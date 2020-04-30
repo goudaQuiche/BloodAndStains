@@ -25,6 +25,9 @@ namespace BloodDripping
         public FloatRange randomRotation;
 
         public bool debug = false;
+        public bool spammingDebug = false;
+
+        public string deathPuddleMoteContainsString;
 
         public HediffCompProperties_BloodDripping()
         {

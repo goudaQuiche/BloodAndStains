@@ -1,14 +1,9 @@
-﻿using RimWorld;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using System.Linq;
 
 using UnityEngine;
-
 using Verse;
-using Verse.AI;
 
 namespace BloodDripping
 {
@@ -36,8 +31,9 @@ namespace BloodDripping
         private readonly int CheckEveryXTicks = 90;
 
         float PuddleSizeMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().PuddleSizeMultiplier;
-
         bool shouldSkip = false;
+
+        ThingDef DeathPuddleMote = null;
 
         public HediffCompProperties_BloodDripping Props
         {
@@ -65,6 +61,14 @@ namespace BloodDripping
             get
             {
                 return myPawn.IsBleeding();
+            }
+        }
+
+        public bool WasBleeding
+        {
+            get
+            {
+                return (bleedRateTotal > 0);
             }
         }
 
@@ -109,7 +113,7 @@ namespace BloodDripping
                 "New bleed rate: " + bleedRateTotal +
                 "; bleedingScale: " + bleedingScale +
                 "; ticksUntilPuddle: " + ticksUntilPuddle
-                , Props.debug);
+                , Props.spammingDebug);
 
         }
 
@@ -120,7 +124,7 @@ namespace BloodDripping
             {
                 if (TerrainAllowsPuddle(myPawn))
                 {
-                    //Tools.Warn(myPawn.LabelShort + " trying to place bloody puddle", Props.debug);
+                    Tools.Warn(myPawn.LabelShort + " trying to place bloody puddle", Props.spammingDebug);
                     TryPlaceMote();
                 }
 
@@ -187,7 +191,11 @@ namespace BloodDripping
                 shouldSkip = true;
                 return;
             }
-                
+
+            //DeathPuddleMote = DefDatabase<ThingDef>.AllDefs.Where((ThingDef b) => b.defName.Contains("BNS_Mote_DeathPuddle_R"));
+            if(!Props.deathPuddleMoteContainsString.NullOrEmpty())
+                DeathPuddleMote = DefDatabase<ThingDef>.AllDefs.Where((ThingDef b) => b.defName.Contains(Props.deathPuddleMoteContainsString))?.RandomElement();
+
             puddleMoteDef = Props.puddleMoteDef;
             ticksUntilPuddle = Props.period;
         }
@@ -220,7 +228,43 @@ namespace BloodDripping
             return answer;
         }
 
-        private void TryPlaceMote()
+        public void TryPlaceDeathMote()
+        {
+            if (!Pawn.health.Dead)
+            {
+                Tools.Warn(myPawn + " is not dead, leave him alone, leaving TryPlaceDeathMote", Props.debug);
+                return;
+            }
+            if (DeathPuddleMote == null)
+            {
+                Tools.Warn("No death mote, give <deathPuddleMoteContainsString> a value in Hediff_Red_BloodDripping", Props.debug);
+                return;
+            }
+
+            Tools.Warn(myPawn + " entering TryPlaceDeathMote", Props.debug);
+
+            float puddleSize = myPawn.BodySize;
+            FloatRange randRotation = new FloatRange(-30f, 30f);
+            ThingDef deathMote = DeathPuddleMote;
+
+            Vector3 drawPos = myPawn.Corpse.DrawPos;
+            Vector3 normalized = drawPos.normalized;
+            float rot = normalized.AngleFlat();
+
+            Vector3 vector = drawPos;
+            IntVec3 c = vector.ToIntVec3();
+
+            if (c.InBounds(myMap))
+            {
+                TerrainDef terrain = c.GetTerrain(myPawn.Corpse.Map);
+                if (terrain != null)
+                {
+                    PlacePuddle(vector, myMap, rot, puddleSize, deathMote);
+                }
+            }
+        }
+
+        public void TryPlaceMote()
         {
             Vector3 drawPos = myPawn.Drawer.DrawPos;
             Vector3 normalized = drawPos.normalized;
@@ -233,7 +277,7 @@ namespace BloodDripping
             if (!myPawn.IsLaying())
                 vector += StandingOffset;
 
-            Tools.Warn(myPawn.LabelShort+" rot: "+rot, Props.debug);
+            Tools.Warn(myPawn.LabelShort+" rot: "+rot, Props.spammingDebug);
             IntVec3 c = vector.ToIntVec3();
             if (c.InBounds(myMap))
             {

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BloodDripping
 {
-    public static class ToolsPtawn
+    public static class ToolsPawn
     {
         public static bool IsRaceMember(this Pawn pawn, string raceDefName)
         {
@@ -34,6 +34,28 @@ namespace BloodDripping
             return pawn.health.hediffSet.HasHediff(MyDefs.Human_Red_BloodDripping_HediffDef);
         }
 
+        public static Hediff Get_Human_BloodDripping(this Pawn pawn)
+        {
+            return pawn.health.hediffSet.GetFirstHediffOfDef(MyDefs.Human_Red_BloodDripping_HediffDef);
+        }
+        
+        public static Hediff Get_Custom_BloodDripping_Hediff(this Pawn pawn)
+        {
+            if (MyDefs.Custom_BloodDripping_HediffDef.EnumerableNullOrEmpty())
+            {
+                Tools.Warn("Custom_BloodDripping_HediffDef is null", true);
+                return null;
+            }
+            foreach(HediffDef hediffDef in MyDefs.Custom_BloodDripping_HediffDef)
+            {
+                Hediff hediff;
+                if ((hediff = pawn.health.hediffSet.GetFirstHediffOfDef(hediffDef)) != null)
+                    return hediff;
+            }
+
+            return null;
+        }
+        
         public static bool IsBleeding(this Pawn pawn)
         {
             return pawn.health.hediffSet.HasHediff(HediffDefOf.BloodLoss);
