@@ -1,0 +1,3 @@
+use death puddles when lying
+add a Null Tex for base motes
+option to have no red footprint if you are not injured
