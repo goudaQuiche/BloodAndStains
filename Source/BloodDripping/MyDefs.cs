@@ -19,5 +19,8 @@ namespace BloodDripping
         */
 
         public static float HumanSpeed = DefDatabase<ThingDef>.AllDefs.Where((ThingDef h) => h.defName == "Human").First().statBases.GetStatOffsetFromList(StatDefOf.MoveSpeed);
+
+        public static ThingDef HumanBloodyFootprint = DefDatabase<ThingDef>.AllDefs.Where((ThingDef b) => b.defName == "Mote_Human_Red_Footprint").First();
+        
     }
 }

@@ -14,17 +14,13 @@ namespace BloodDripping
 {
     public class HediffComp_Stain_Footprint : HediffComp
     {
-        Pawn myPawn = null;
-        Map myMap = null;
+        public Pawn myPawn = null;
+        public Map myMap = null;
 
-        ThingDef moteFootprintDef = null;
+        public ThingDef moteFootprintDef = null;
 
-        private Vector3 lastFootprintPlacePos;
-        private bool lastFootprintRight;
-        private const float FootprintIntervalDist = 0.632f;
-        private static readonly Vector3 FootprintOffset = new Vector3(0f, 0f, -0.3f);
-        private const float LeftRightOffsetDist = 0.17f;
-        private const float FootprintSplashSize = 2f;
+        public  Vector3 lastFootprintPlacePos;
+        public  bool lastFootprintRight;
 
         private int ticksUntilFootPrint;
         private int footPrintTicksLeft;
@@ -33,9 +29,11 @@ namespace BloodDripping
         public static readonly int LengthPerBloodFilth = 300;
 
         private IntVec3 lastCell;
+        private IntVec3 lastDrawnFootprintCell;
 
         int FilthPerSteppedInItMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().FilthPerSteppedInItMultiplier;
         int MaxFilthCarriedMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().MaxFilthCarriedMultiplier;
+        bool RedFootprintOnlyIfInjured = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().RedFootprintOnlyIfInjured;
 
         bool shouldSkip = false;
 
@@ -60,7 +58,6 @@ namespace BloodDripping
             if (shouldSkip)
                 return;
 
-
             if (myMap.moteCounter.SaturatedLowPriority)
             {
                 Tools.Warn(myPawn?.LabelShort + "mote Counter Saturated", Props.debug);
@@ -72,6 +69,13 @@ namespace BloodDripping
                 return;
             }
 
+            if (RedFootprintOnlyIfInjured && !myPawn.IsBleeding() && moteFootprintDef == MyDefs.HumanBloodyFootprint)
+            {
+                Tools.Warn(myPawn.LabelShort + " wont footprint : Modsetting + uninjured + HumanBloodyFootprint", Props.debug);
+                return;
+            }
+                
+
             if (myPawn.IsLaying())
             {
                 Tools.Warn(myPawn.LabelShort + " is laying, wont footprint", Props.debug);
@@ -79,19 +83,26 @@ namespace BloodDripping
             }
 
             if (myPawn.Position == lastCell)
+            {
                 CellScan();
-
+            }
             lastCell = myPawn.Position;
 
-            if (!IsStained)
+            if ( !IsStained || lastDrawnFootprintCell == myPawn.Position)
                 return;
 
             if (footPrintTicksLeft <= 0)
             {
                 if (TerrainAllowsPuddle(myPawn))
                 {
-                    Tools.Warn(myPawn.LabelShort + " trying to place bloody foot print", Props.debug);
-                    TryPlaceFootprint();
+                    Tools.Warn(myPawn.LabelShort + " trying to place bloody " + (Props.trailLikefootprint ? "trail" : "foot print"), Props.debug);
+
+                    if (Props.trailLikefootprint)
+                        this.TryPlaceTrailPrint();
+                    else
+                        this.TryPlaceFootprint();
+
+                    lastDrawnFootprintCell = myPawn.Position;
                 }
 
                 Reset();
@@ -104,6 +115,7 @@ namespace BloodDripping
             stainedLengthTicks--;
 
         }
+
         private void CellScan()
         {
             List<Thing> thingList = myPawn.Position.GetThingList(myMap);
@@ -193,59 +205,37 @@ namespace BloodDripping
                 footPrintTicksLeft /= 2;
         }
 
-        public static void PlaceFootprint(Vector3 loc, Map map, float rot, ThingDef Mote_FootprintDef)
+        string DumpTriggeringFilths()
         {
-            if (!loc.ShouldSpawnMotesAt(map) || map.moteCounter.SaturatedLowPriority)
+            string result = string.Empty;
+            result = "tFp list: ";
+            foreach (Footprint fp in Props.footprint)
             {
-                return;
+                result += fp.defName + "; ";
             }
-            MoteThrown moteThrown = (MoteThrown)ThingMaker.MakeThing(Mote_FootprintDef, null);
-            moteThrown.Scale = 0.5f;
-            moteThrown.exactRotation = rot;
-            moteThrown.exactPosition = loc;
-            GenSpawn.Spawn(moteThrown, loc.ToIntVec3(), map, WipeMode.Vanish);
+            return result;
         }
-        private void TryPlaceFootprint()
-        {
 
-            Vector3 drawPos = myPawn.Drawer.DrawPos;
-            Vector3 normalized = (drawPos - lastFootprintPlacePos).normalized;
-            float rot = normalized.AngleFlat();
-            float angle = (float)((!lastFootprintRight) ? -90 : 90);
-            Vector3 b = normalized.RotatedBy(angle) * 0.17f * Mathf.Sqrt(myPawn.BodySize);
-            Vector3 vector = drawPos + FootprintOffset + b;
-            IntVec3 c = vector.ToIntVec3();
-            if (c.InBounds(myMap))
-            {
-                TerrainDef terrain = c.GetTerrain(myPawn.Map);
-                if (terrain != null)
-                {
-                    PlaceFootprint(vector, myMap, rot, moteFootprintDef);
-                }
-            }
-            lastFootprintPlacePos = drawPos;
-            lastFootprintRight = !lastFootprintRight;
-        }
 
         public override string CompTipStringExtra
         {
             get
             {
                 string result = string.Empty;
+
                 if (Props.debug)
                 {
-                    if (Props.debug)
-                    {
-                        result += "IsBloodStained: " + IsStained
-                        + "\n moteSaturated" + myMap.moteCounter.SaturatedLowPriority;
+                    result += "IsBloodStained: " + IsStained
+                    + "\n moteSaturated" + myMap.moteCounter.SaturatedLowPriority
+                    + "\n "+DumpTriggeringFilths();
 
-                        if (IsStained)
-                            result +=
-                            "\n BloodStainedLengthTicks: " + stainedLengthTicks
-                            + "\n Ticks: " + footPrintTicksLeft + "/" + ticksUntilFootPrint
-                            + "\n MoteFootprint: " + moteFootprintDef?.defName;
-                    }
+                    if (IsStained)
+                        result +=
+                        "\n BloodStainedLengthTicks: " + stainedLengthTicks
+                        + "\n Ticks: " + footPrintTicksLeft + "/" + ticksUntilFootPrint
+                        + "\n MoteFootprint: " + moteFootprintDef?.defName;
                 }
+
                 return result;
             }
         }

@@ -12,6 +12,7 @@ namespace BloodDripping
         public int PuddleSizeMultiplier = 1;
         public int FilthPerSteppedInItMultiplier = 1;
         public int MaxFilthCarriedMultiplier = 1;
+        public bool RedFootprintOnlyIfInjured = false;
 
         public override void ExposeData()
         {
@@ -19,6 +20,7 @@ namespace BloodDripping
             Scribe_Values.Look(ref PuddleSizeMultiplier, "PuddleSizeMultiplier");
             Scribe_Values.Look(ref FilthPerSteppedInItMultiplier, "FilthPerSteppedInItMultiplier");
             Scribe_Values.Look(ref MaxFilthCarriedMultiplier, "MaxFilthCarriedMultiplier");
+            Scribe_Values.Look(ref RedFootprintOnlyIfInjured, "RedFootprintOnlyIfInjured");
         }
 
     }
@@ -60,6 +62,8 @@ namespace BloodDripping
             listing.Label("Max filth carried multiplier - Will augment the limit of footprints if pawns keeps on stepping it : " + settings.MaxFilthCarriedMultiplier+"x");
             listing.Label("Limit : " + (HediffComp_Stain_Footprint.StainedTicksLimit * settings.MaxFilthCarriedMultiplier).TicksToSeconds()+" seconds");
             settings.MaxFilthCarriedMultiplier = (int)listing.Slider(settings.MaxFilthCarriedMultiplier, 1f, 5f);
+
+            listing.CheckboxLabeled("Red footprints only if injured (Humans only): ", ref settings.RedFootprintOnlyIfInjured);
 
             listing.End();
             base.DoSettingsWindowContents(inRect);

@@ -4,7 +4,7 @@
 	<ThingDef Name="FootprintBase" ParentName="MoteBase">
 		<defName>FootprintBase</defName>
 		<graphicData>
-			<texPath>NullTex</texPath>
+			<texPath>Mote/Error</texPath>
 		</graphicData>
 		<altitudeLayer>MoteLow</altitudeLayer>
 		<mote>
@@ -23,6 +23,15 @@
 		</graphicData>
 	</ThingDef>
 	-->
+
+<!-- brown	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Brown_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Brown_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
 	<!-- red	 -->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Red_Footprint</defName>
@@ -30,13 +39,15 @@
 			<texPath>Mote/Footprint/Human/Red_Footprint</texPath>
 		</graphicData>
 	</ThingDef>
-	<!-- green	 -->
+	
+	<!-- orange	 -->
 	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_Human_Green_Footprint</defName>
+		<defName>Mote_Human_Orange_Footprint</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Green_Footprint</texPath>
+			<texPath>Mote/Footprint/Human/Orange_Footprint</texPath>
 		</graphicData>
 	</ThingDef>
+
 	<!-- yellow	 -->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Yellow_Footprint</defName>
@@ -44,12 +55,78 @@
 			<texPath>Mote/Footprint/Human/Yellow_Footprint</texPath>
 		</graphicData>
 	</ThingDef>
-	<!-- brown	 -->
+
+	<!-- green	 -->
 	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_Human_Brown_Footprint</defName>
+		<defName>Mote_Human_LightGreen_Footprint</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Brown_Footprint</texPath>
+			<texPath>Mote/Footprint/Human/LightGreen_Footprint</texPath>
 		</graphicData>
 	</ThingDef>
+	
+	<!-- green	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Green_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Green_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
+	<!-- cyan	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Cyan_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Cyan_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
+	<!-- blue	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Blue_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Blue_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
+	<!-- pink	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Pink_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Pink_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
+	<!-- purple	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Purple_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Purple_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+
+	<!-- black	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Black_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Black_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
+		<!-- grey	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_Grey_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/Grey_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	
+		<!-- white	 -->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_White_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/White_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+
 
 </Defs>
