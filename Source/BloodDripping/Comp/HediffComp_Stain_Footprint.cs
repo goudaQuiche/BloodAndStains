@@ -95,9 +95,9 @@ namespace BloodDripping
             {
                 if (TerrainAllowsPuddle(myPawn))
                 {
-                    Tools.Warn(myPawn.LabelShort + " trying to place bloody " + (Props.trailLikefootprint ? "trail" : "foot print"), Props.debug);
+                    Tools.Warn(myPawn.LabelShort + " trying to place bloody " + (Props.trailLikeFootprint ? "trail" : "foot print"), Props.debug);
 
-                    if (Props.trailLikefootprint)
+                    if (Props.trailLikeFootprint)
                         this.TryPlaceTrailPrint();
                     else
                         this.TryPlaceFootprint();

@@ -19,7 +19,7 @@ namespace BloodDripping
 
         public List<Footprint> footprint;
         
-        public bool trailLikefootprint = false;
+        public bool trailLikeFootprint = false;
         public FloatRange randomScale = new FloatRange(.75f, 1);
 
         public bool debug = false;

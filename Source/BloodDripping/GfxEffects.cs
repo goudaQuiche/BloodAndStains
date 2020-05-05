@@ -28,9 +28,7 @@ namespace BloodDripping
                 return;
             }
             MoteThrown moteThrown = (MoteThrown)ThingMaker.MakeThing(Mote_FootprintDef, null);
-
             //moteThrown.Graphic.color = Color.blue;
-
             moteThrown.Scale = scale;
             moteThrown.exactRotation = rot;
             moteThrown.exactPosition = loc;
