@@ -164,6 +164,14 @@ namespace BloodDripping
             myPawn = parent.pawn;
             myMap = myPawn.Map;
 
+            if (!myPawn.IsHuman() && Props.race.NullOrEmpty())
+            {
+                Log.Error("no race set in the footprint hediffCompProps, you need one for an alien race, destroying hediff");
+                parent.Severity = 0;
+                shouldSkip = true;
+                return;
+            }
+
             if (myMap == null)
             {
                 Tools.Warn("pawn is not on map anymore", Props.debug);
