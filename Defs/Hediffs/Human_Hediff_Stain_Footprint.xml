@@ -30,7 +30,7 @@
 		
 		<comps>
 			<li Class="BloodDripping.HediffCompProperties_Stain_Footprint">
-				<period>30</period>
+				<race>Human</race>
 				
 				<footprint>
 					<li>
@@ -63,7 +63,15 @@
 					</li>
 				</footprint>
 				
-				<!-- <debug>true</debug> -->
+				<period>30</period>
+				<randomScale>.5~.5</randomScale>
+				
+				<!-- <rightFootRotation>45</rightFootRotation> -->
+				<!-- <leftFootRotation>-15</leftFootRotation> -->
+				
+				<!-- <missingPartMote_fullDefname></missingPartMote_fullDefname> -->
+				
+				<debug>true</debug>
 			</li>
 		</comps>
 	</HediffDef>

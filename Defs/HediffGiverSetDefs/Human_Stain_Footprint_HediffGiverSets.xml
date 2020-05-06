@@ -6,7 +6,7 @@
 		
 		<hediffGivers>
 		
-			<li Class="BloodDripping.Human_HediffGiver_Stain_Footprint">
+			<li Class="BloodDripping.CustomRace_HediffGiver_Stain_Footprint">
 				<hediff>Hediff_Human_Stain_Footprint</hediff>
 
 				<partsToAffect>

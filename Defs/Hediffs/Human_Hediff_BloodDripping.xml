@@ -43,6 +43,8 @@
 		
 		<comps>
 			<li Class="BloodDripping.HediffCompProperties_BloodDripping">
+				<race>Human</race>
+			
 				<period>40</period>
 				<minPeriod>30</minPeriod>
 				<maxPeriod>80</maxPeriod>

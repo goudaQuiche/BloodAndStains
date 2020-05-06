@@ -18,9 +18,17 @@ namespace BloodDripping
         public string race;
 
         public List<Footprint> footprint;
-        
+        public bool disabilityFootprints = true;
+
         public bool trailLikeFootprint = false;
+
         public FloatRange randomScale = new FloatRange(.75f, 1);
+        public float rightFootRotation = 0;
+        public float leftFootRotation = 0;
+
+        public string missingPartMote_pattern = "Mote_Human_MissingPart";
+        public string peglegMote_pattern = "_Pegleg";
+        public string woodenfootMote_pattern = "_Woodenfoot";
 
         public bool debug = false;
 

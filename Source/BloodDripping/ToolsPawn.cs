@@ -13,32 +13,28 @@ namespace BloodDripping
         {
             return pawn?.def.defName == raceDefName;
         }
+        public static bool IsHuman(this Pawn pawn)
+        {
+            return pawn?.def.defName == "Human";
+        }
 
         public static bool HasHediff(this Pawn pawn, HediffDef hediffDef)
         {
             return pawn.health.hediffSet.HasHediff(hediffDef);
         }
 
-        public static bool IsHuman(this Pawn pawn)
-        {
-            return pawn?.def.defName == "Human";
-        }
-
         public static bool Has_Human_Stain_Footprint(this Pawn pawn)
         {
             return pawn.health.hediffSet.HasHediff(MyDefs.Human_Stain_Footprint_HediffDef);
         }
-
         public static bool Has_Human_BloodDripping(this Pawn pawn)
         {
             return pawn.health.hediffSet.HasHediff(MyDefs.Human_Red_BloodDripping_HediffDef);
         }
-
         public static Hediff Get_Human_BloodDripping(this Pawn pawn)
         {
             return pawn.health.hediffSet.GetFirstHediffOfDef(MyDefs.Human_Red_BloodDripping_HediffDef);
         }
-        
         public static Hediff Get_Custom_BloodDripping_Hediff(this Pawn pawn)
         {
             if (MyDefs.Custom_BloodDripping_HediffDef.EnumerableNullOrEmpty())
@@ -60,7 +56,6 @@ namespace BloodDripping
         {
             return pawn.health.hediffSet.HasHediff(HediffDefOf.BloodLoss);
         }
-
         public static bool IsLaying(this Pawn pawn)
         {
             return (pawn.Downed ||
@@ -72,7 +67,6 @@ namespace BloodDripping
         {
             return pawn.def.race.BloodDef != null;
         }
-
         public static Color GetBloodColor(this Pawn pawn)
         {
             if (pawn.HasBloodDef())
@@ -87,5 +81,7 @@ namespace BloodDripping
         {
             return pawn.health.capacities.GetLevel(PawnCapacityDefOf.BloodPumping);
         }
+
+ 
     }
 }

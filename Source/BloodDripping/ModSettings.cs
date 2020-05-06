@@ -14,6 +14,8 @@ namespace BloodDripping
         public int MaxFilthCarriedMultiplier = 1;
         public bool RedFootprintOnlyIfInjured = false;
 
+        public bool SafeRemoval = false;
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -21,6 +23,7 @@ namespace BloodDripping
             Scribe_Values.Look(ref FilthPerSteppedInItMultiplier, "FilthPerSteppedInItMultiplier");
             Scribe_Values.Look(ref MaxFilthCarriedMultiplier, "MaxFilthCarriedMultiplier");
             Scribe_Values.Look(ref RedFootprintOnlyIfInjured, "RedFootprintOnlyIfInjured");
+            Scribe_Values.Look(ref SafeRemoval, "SafeRemoval");
         }
 
     }
@@ -36,7 +39,7 @@ namespace BloodDripping
 
         public override string SettingsCategory()
         {
-            return "Blood an stains";
+            return "Blood and Stains";
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
@@ -64,6 +67,21 @@ namespace BloodDripping
             settings.MaxFilthCarriedMultiplier = (int)listing.Slider(settings.MaxFilthCarriedMultiplier, 1f, 5f);
 
             listing.CheckboxLabeled("Red footprints only if injured (Humans only): ", ref settings.RedFootprintOnlyIfInjured);
+
+            listing.Gap();
+            listing.Gap();
+
+            listing.Label("Safe mod removal");
+            listing.GapLine();
+            listing.Label(
+                " 1. Check this if you want to remove the mod"+
+                "\n 2. Load your saved game, wait a few seconds"+
+                "\n 3. Save, preferably in another slot"+
+                "\n 4. Quit and remove the mod"+
+                "\n 5. Load your last save"
+            );
+
+            listing.CheckboxLabeled("SafeModRemoval: ", ref settings.SafeRemoval);
 
             listing.End();
             base.DoSettingsWindowContents(inRect);

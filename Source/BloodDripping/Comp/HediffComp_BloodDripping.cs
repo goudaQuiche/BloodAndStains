@@ -31,6 +31,8 @@ namespace BloodDripping
         private readonly int CheckEveryXTicks = 90;
 
         float PuddleSizeMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().PuddleSizeMultiplier;
+        bool SafeRemoval = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().SafeRemoval;
+
         bool shouldSkip = false;
 
         ThingDef DeathPuddleMote = null;
@@ -175,6 +177,15 @@ namespace BloodDripping
             Tools.Warn("Entering Init", Props.debug);
             myPawn = parent.pawn;
             myMap = myPawn.Map;
+
+            if (SafeRemoval)
+            {
+                Log.Warning("SafeModRemoval activated");
+                parent.Severity = 0;
+                shouldSkip = true;
+                parent.PostRemoved();
+                return;
+            }
 
             if (!myPawn.IsHuman() && Props.race.NullOrEmpty())
             {

@@ -7,8 +7,12 @@ namespace BloodDripping
 {
     public class CustomRace_HediffGiver_BloodDripping : HediffGiver
     {
+        bool SafeRemoval = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().SafeRemoval;
+
         public override void OnIntervalPassed(Pawn pawn, Hediff cause)
         {
+            if (SafeRemoval) return;
+
             if (pawn == null || pawn.Map == null || !pawn.Spawned)
                 return;
 

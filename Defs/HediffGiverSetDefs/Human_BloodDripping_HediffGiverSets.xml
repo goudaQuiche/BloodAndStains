@@ -5,7 +5,7 @@
 		<defName>Human_BloodDripping_HediffGiverSet</defName>
 		
 		<hediffGivers>
-			<li Class="BloodDripping.Human_HediffGiver_BloodDripping">
+			<li Class="BloodDripping.CustomRace_HediffGiver_BloodDripping">
 				<hediff>Hediff_Red_BloodDripping</hediff>
 
 				<partsToAffect>

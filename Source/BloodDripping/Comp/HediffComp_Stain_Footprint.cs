@@ -19,6 +19,9 @@ namespace BloodDripping
 
         public ThingDef moteFootprintDef = null;
 
+        public ThingDef moteRightFootprintDef = null;
+        public ThingDef moteLeftFootprintDef = null;
+
         public  Vector3 lastFootprintPlacePos;
         public  bool lastFootprintRight;
 
@@ -31,9 +34,15 @@ namespace BloodDripping
         private IntVec3 lastCell;
         private IntVec3 lastDrawnFootprintCell;
 
-        int FilthPerSteppedInItMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().FilthPerSteppedInItMultiplier;
-        int MaxFilthCarriedMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().MaxFilthCarriedMultiplier;
-        bool RedFootprintOnlyIfInjured = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().RedFootprintOnlyIfInjured;
+        Hediff LeftLegHediff = null;
+        Hediff RightLegHediff = null;
+        public bool availableDisabilityMotes = false;
+
+        readonly int FilthPerSteppedInItMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().FilthPerSteppedInItMultiplier;
+        readonly int MaxFilthCarriedMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().MaxFilthCarriedMultiplier;
+        readonly bool RedFootprintOnlyIfInjured = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().RedFootprintOnlyIfInjured;
+
+        readonly bool SafeRemoval = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().SafeRemoval;
 
         bool shouldSkip = false;
 
@@ -41,13 +50,28 @@ namespace BloodDripping
         {
             get
             {
-                return (HediffCompProperties_Stain_Footprint)this.props;
+                return (HediffCompProperties_Stain_Footprint)props;
             }
         }
 
         public override void CompPostMake()
         {
             Init();
+        }
+
+        bool HasLeftLegHediff
+        {
+            get
+            {
+                return LeftLegHediff != null;
+            }
+        }
+        bool HasRightLegHediff
+        {
+            get
+            {
+                return RightLegHediff != null;
+            }
         }
 
         public override void CompPostTick(ref float severityAdjustment)
@@ -63,18 +87,30 @@ namespace BloodDripping
                 Tools.Warn(myPawn?.LabelShort + "mote Counter Saturated", Props.debug);
                 return;
             }
+
             if (!myPawn.Spawned)
             {
                 Tools.Warn("unspawned pawn", Props.debug);
                 return;
             }
 
-            if (RedFootprintOnlyIfInjured && !myPawn.IsBleeding() && moteFootprintDef == MyDefs.HumanBloodyFootprint)
+            if (
+                RedFootprintOnlyIfInjured && !myPawn.IsBleeding() &&
+                (moteFootprintDef == MyDefs.HumanBloodyFootprint) || (moteFootprintDef == MyDefs.HumanBloodyPegleg) || (moteFootprintDef == MyDefs.HumanBloodyWoodenfoot)
+                )
             {
                 Tools.Warn(myPawn.LabelShort + " wont footprint : Modsetting + uninjured + HumanBloodyFootprint", Props.debug);
                 return;
             }
-                
+
+            if (Tools.TrueEvery30Sec)
+                if (availableDisabilityMotes)
+                {
+                    LeftLegHediff = myPawn.GetLeftLegFirstRelevantHediff(Props.debug);
+                    RightLegHediff = myPawn.GetRightLegFirstRelevantHediff(Props.debug);
+                }
+                else
+                    Tools.Warn(myPawn.LabelShort + " - Disability motes are disabled, no disability mote update", Props.debug);
 
             if (myPawn.IsLaying())
             {
@@ -88,20 +124,21 @@ namespace BloodDripping
             }
             lastCell = myPawn.Position;
 
-            if ( !IsStained || lastDrawnFootprintCell == myPawn.Position)
+            if (!IsStained || lastDrawnFootprintCell == myPawn.Position)
                 return;
 
             if (footPrintTicksLeft <= 0)
             {
                 if (TerrainAllowsPuddle(myPawn))
                 {
-                    Tools.Warn(myPawn.LabelShort + " trying to place bloody " + (Props.trailLikeFootprint ? "trail" : "foot print"), Props.debug);
-
-                    if (Props.trailLikeFootprint)
-                        this.TryPlaceTrailPrint();
+                    string moteName = string.Empty;
+                    if (HasDisabilityHediff && availableDisabilityMotes)
+                        moteName = (lastFootprintRight ? moteRightFootprintDef?.defName : moteLeftFootprintDef?.defName);
                     else
-                        this.TryPlaceFootprint();
+                        moteName = moteFootprintDef?.defName;
+                    Tools.Warn(myPawn.LabelShort + " trying to place bloody " + (Props.trailLikeFootprint ? "trail" : "foot print") + ": " + moteName, Props.debug);
 
+                    this.TryPlaceFootprint(Props.trailLikeFootprint);
                     lastDrawnFootprintCell = myPawn.Position;
                 }
 
@@ -115,6 +152,20 @@ namespace BloodDripping
             stainedLengthTicks--;
 
         }
+        public bool HasRotation
+        {
+            get
+            {
+                return (Props.leftFootRotation != 0 || Props.rightFootRotation != 0);
+            }
+        }
+        public bool HasDisabilityHediff
+        {
+            get
+            {
+                return HasLeftLegHediff || HasRightLegHediff;
+            }
+        }
 
         private void CellScan()
         {
@@ -122,18 +173,31 @@ namespace BloodDripping
             for (int i = 0; i < thingList.Count; i++)
             {
                 Thing curT = thingList[i];
-                
+
                 if (curT.def.category != ThingCategory.Filth)
                     continue;
-                
+
                 foreach (Footprint curFP in Props.footprint)
                 {
-                    foreach(ThingDef curFilth in curFP.triggerOnFilthDef)
+                    foreach (ThingDef curFilth in curFP.triggerOnFilthDef)
                     {
-                        if(curT.def == curFilth)
+                        if (curT.def == curFilth)
                         {
                             stainedLengthTicks += LengthPerBloodFilth * FilthPerSteppedInItMultiplier;
+
                             moteFootprintDef = curFP.moteDef;
+                            if (Props.disabilityFootprints && availableDisabilityMotes && HasDisabilityHediff)
+                            {
+                                moteLeftFootprintDef = moteRightFootprintDef = moteFootprintDef;
+                                if (HasLeftLegHediff)
+                                    moteLeftFootprintDef = this.RegularMoteToDisabilityHediffMote(LeftLegHediff, curFP.moteDef, Props.debug);
+                                if (HasRightLegHediff)
+                                    moteRightFootprintDef = this.RegularMoteToDisabilityHediffMote(RightLegHediff, curFP.moteDef, Props.debug);
+
+                                Tools.Warn(myPawn.LabelShort + " has disability: " + HasDisabilityHediff + " - Left: " + LeftLegHediff?.def.defName + "; Right: " + RightLegHediff?.def.defName, Props.debug);
+                                Tools.Warn(myPawn.LabelShort + " motes: Left: " + moteLeftFootprintDef?.defName + "; Right: " + moteRightFootprintDef?.defName, Props.debug);
+                            }
+
                             break;
                         }
                     }
@@ -159,16 +223,61 @@ namespace BloodDripping
                 return (stainedLengthTicks > 0);
             }
         }
+
+        bool CheckBaseConf
+        {
+            get
+            {
+                //if (!myPawn.IsHuman() && Props.race.NullOrEmpty())
+                if (Props.race.NullOrEmpty())
+                {
+                    Log.Error("no race set in the footprint hediffCompProps, you need one for an alien race, destroying hediff");
+
+                    return false;
+                }
+                else Tools.Warn("race set to: " + Props.race, Props.debug);
+
+                if (Props.footprint.NullOrEmpty())
+                {
+                    Tools.Warn("no Footprint Def found, destroying hediff", Props.debug);
+                    return false;
+                }
+                else Tools.Warn("set footprint number: " + Props.footprint.Count, Props.debug);
+
+                foreach (Footprint curFP in Props.footprint)
+                {
+                    if (curFP.triggerOnFilthDef.NullOrEmpty())
+                    {
+                        Tools.Warn("no Filth Def found in " + curFP.defName, Props.debug);
+                        return false;
+                    }
+                    else Tools.Warn("Found: " + curFP.defName, Props.debug);
+                }
+
+                return true;
+            }
+        }
+
+        void CheckDisabilitiesConf()
+        {
+            if (!Props.peglegMote_pattern.NullOrEmpty() && !Props.woodenfootMote_pattern.NullOrEmpty() && !Props.missingPartMote_pattern.NullOrEmpty())
+            {
+                availableDisabilityMotes = this.CheckDisabilityMotes(Props.debug);
+            }
+            Tools.Warn("Trying to disability footprints: "+ Props.disabilityFootprints + " - Available disability motes: " + availableDisabilityMotes, Props.debug);
+        }
+
         public void Init()
         {
             myPawn = parent.pawn;
             myMap = myPawn.Map;
 
-            if (!myPawn.IsHuman() && Props.race.NullOrEmpty())
+            if (SafeRemoval)
             {
-                Log.Error("no race set in the footprint hediffCompProps, you need one for an alien race, destroying hediff");
+                Log.Warning("SafeModRemoval activated");
                 parent.Severity = 0;
                 shouldSkip = true;
+                parent.PostRemoved();
                 return;
             }
 
@@ -180,24 +289,15 @@ namespace BloodDripping
                 return;
             }
 
-            if (Props.footprint.NullOrEmpty())
+            if (!CheckBaseConf)
             {
-                Tools.Warn("no Footprint Def found, destroying hediff", Props.debug);
                 parent.Severity = 0;
                 shouldSkip = true;
-                return;
+                parent.PostRemoved();
             }
 
-            foreach(Footprint curFP in Props.footprint)
-            {
-                if (curFP.triggerOnFilthDef.NullOrEmpty())
-                {
-                    Tools.Warn("no Filth Def found in "+ curFP.defName, Props.debug);
-                    parent.Severity = 0;
-                    shouldSkip = true;
-                    return;
-                }
-            }
+            if(Props.disabilityFootprints)
+                CheckDisabilitiesConf();
 
             if (myPawn.GetStatValue(StatDefOf.MoveSpeed) < MyDefs.HumanSpeed)
                 ticksUntilFootPrint = Props.period;
@@ -205,7 +305,11 @@ namespace BloodDripping
                 ticksUntilFootPrint = (int)(Props.period / (myPawn.GetStatValue(StatDefOf.MoveSpeed) / MyDefs.HumanSpeed));
 
             lastCell = myPawn.Position;
+
+            Tools.Warn(myPawn.LabelShort+" passed " + Def.defName + " Init()\n--------", Props.debug);
+
         }
+
         void Reset()
         {
             footPrintTicksLeft = ticksUntilFootPrint;

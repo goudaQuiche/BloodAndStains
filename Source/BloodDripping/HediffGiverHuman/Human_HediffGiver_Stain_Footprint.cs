@@ -7,9 +7,12 @@ namespace BloodDripping
 {
     public class Human_HediffGiver_Stain_Footprint : HediffGiver
     {
-        
+        bool SafeRemoval = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().SafeRemoval;
+
         public override void OnIntervalPassed(Pawn pawn, Hediff cause)
         {
+            if (SafeRemoval) return;
+
             bool flag = pawn != null && pawn.Map != null && pawn.Spawned && pawn.IsHuman() && !pawn.Has_Human_Stain_Footprint();
 
             if (flag)
