@@ -22,7 +22,6 @@
 	<!-- human footprints -->	
 	<HediffDef ParentName="Hediff_HiddenBase">
 		<defName>Hediff_Human_Stain_Footprint</defName>
-		<!-- <defName>Hediff_Human_Stain_Footprint</defName> -->
 		<hediffClass>HediffWithComps</hediffClass>
 
 		<description>human footprints</description>
@@ -71,7 +70,7 @@
 				
 				<!-- <missingPartMote_fullDefname></missingPartMote_fullDefname> -->
 				
-				<debug>true</debug>
+				<!-- <debug>true</debug> -->
 			</li>
 		</comps>
 	</HediffDef>

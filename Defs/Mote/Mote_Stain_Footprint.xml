@@ -52,15 +52,27 @@
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Yellow_Footprint</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Yellow_Footprint</texPath>
+			<!-- <texPath>Mote/Footprint/Human/Yellow_Footprint</texPath> -->
+			<texPath>Mote/Footprint/Human/White_Footprint</texPath>
+			<color>(179, 185, 73, 180)</color>
 		</graphicData>
 	</ThingDef>
 
 	<!-- green	 -->
+	<!--
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_LightGreen_Footprint</defName>
 		<graphicData>
 			<texPath>Mote/Footprint/Human/LightGreen_Footprint</texPath>
+		</graphicData>
+	</ThingDef>
+	-->
+	<ThingDef ParentName="FootprintBase">
+		<defName>Mote_Human_LightGreen_Footprint</defName>
+		<graphicData>
+			<texPath>Mote/Footprint/Human/White_Footprint</texPath>
+			<!-- C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Data\Core\Defs\ThingDefs_Misc\Filth_Various.xml -->
+			<color>(132, 138, 114, 180)</color>
 		</graphicData>
 	</ThingDef>
 	
