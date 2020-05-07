@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 	
-<!-- brown	 -->
+	<!-- brown	 -->
+	<!-- colorized -->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Brown_Pegleg</defName>
 		<graphicData>
 			<texPath>Mote/Footprint/Human/Pegleg/Brown_Pegleg</texPath>
+			<color>(97,65,48,97)</color>
 		</graphicData>
 	</ThingDef>
 	
@@ -26,18 +28,22 @@
 	</ThingDef>
 
 	<!-- yellow	 -->
+	<!-- colorized -->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Yellow_Pegleg</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Pegleg/Yellow_Pegleg</texPath>
+			<texPath>Mote/Footprint/Human/Pegleg/White_Pegleg</texPath>
+			<color>(179, 185, 73, 180)</color>
 		</graphicData>
 	</ThingDef>
 
-	<!-- green	 -->
+	<!-- LIGHT GREEN	 -->
+	<!-- colorized -->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_LightGreen_Pegleg</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Pegleg/LightGreen_Pegleg</texPath>
+			<texPath>Mote/Footprint/Human/Pegleg/White_Pegleg</texPath>
+			<color>(132, 138, 114, 180)</color>
 		</graphicData>
 	</ThingDef>
 	

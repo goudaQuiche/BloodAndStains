@@ -4,17 +4,21 @@
 	<author>Gouda quiche</author>
 	<url>https://github.com/goudaQuiche</url>
 	<supportedVersions>
-			<li>1.1</li>
+		<li>1.1</li>
 	</supportedVersions>
 	<packageId>goudaquiche.BloodAndStains.src</packageId>
-	
+
 	<loadBefore>
 		<li>goudaquiche.LtfSlugRace</li>
 		<li>goudaquiche.EquiumsBnS</li>
 		<li>goudaquiche.LtfMantisBloodAndStains</li>
 		<li>SkylorBeck.Syntho.Base</li>
 	</loadBefore>
-	
+
+	<incompatibleWith>
+		<li>goudaquiche.BloodAndStains</li>
+	</incompatibleWith>
+
 	<description>Adds puddles when a pawn is bleeding and footprints when a pawn stepped in filth.
 
 Thanks to:

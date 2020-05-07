@@ -14,21 +14,13 @@
 		</mote>
 	</ThingDef>
 
-	<!-- need colorized	 -->
-	<!--
-	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_ColorizedFootprint</defName>
-		<graphicData>
-			<texPath>Mote/Footprint/Footprint</texPath>
-		</graphicData>
-	</ThingDef>
-	-->
-
-<!-- brown	 -->
+	<!-- brown	 -->
+	<!-- colorized	-->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Brown_Footprint</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Brown_Footprint</texPath>
+			<texPath>Mote/Footprint/Human/White_Footprint</texPath>
+			<color>(97,65,48,97)</color>
 		</graphicData>
 	</ThingDef>
 	
@@ -49,6 +41,7 @@
 	</ThingDef>
 
 	<!-- yellow	 -->
+	<!-- colorized	-->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Yellow_Footprint</defName>
 		<graphicData>
@@ -58,15 +51,8 @@
 		</graphicData>
 	</ThingDef>
 
-	<!-- green	 -->
-	<!--
-	<ThingDef ParentName="FootprintBase">
-		<defName>Mote_Human_LightGreen_Footprint</defName>
-		<graphicData>
-			<texPath>Mote/Footprint/Human/LightGreen_Footprint</texPath>
-		</graphicData>
-	</ThingDef>
-	-->
+	<!-- light green	 -->
+	<!-- colorized	-->
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_LightGreen_Footprint</defName>
 		<graphicData>
