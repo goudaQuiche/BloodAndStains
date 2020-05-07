@@ -296,8 +296,16 @@ namespace BloodDripping
                 parent.PostRemoved();
             }
 
-            if(Props.disabilityFootprints)
+            if (Props.disabilityFootprints)
+            {
                 CheckDisabilitiesConf();
+                if (availableDisabilityMotes)
+                {
+                    LeftLegHediff = myPawn.GetLeftLegFirstRelevantHediff(Props.debug);
+                    RightLegHediff = myPawn.GetRightLegFirstRelevantHediff(Props.debug);
+                }
+            }
+                
 
             if (myPawn.GetStatValue(StatDefOf.MoveSpeed) < MyDefs.HumanSpeed)
                 ticksUntilFootPrint = Props.period;

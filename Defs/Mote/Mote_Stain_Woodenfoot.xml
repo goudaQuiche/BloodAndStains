@@ -15,7 +15,9 @@
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Red_Woodenfoot</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Woodenfoot/Red_Woodenfoot</texPath>
+			<!-- <texPath>Mote/Footprint/Human/Woodenfoot/Red_Woodenfoot</texPath> -->
+			<texPath>Mote/Footprint/Human/Woodenfoot/White_Woodenfoot</texPath>
+			<color>(131, 34, 34, 180)</color>
 		</graphicData>
 	</ThingDef>
 	

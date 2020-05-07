@@ -6,7 +6,7 @@
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Brown_Pegleg</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Pegleg/Brown_Pegleg</texPath>
+			<texPath>Mote/Footprint/Human/Pegleg/White_Pegleg</texPath>
 			<color>(97,65,48,97)</color>
 		</graphicData>
 	</ThingDef>
@@ -15,7 +15,9 @@
 	<ThingDef ParentName="FootprintBase">
 		<defName>Mote_Human_Red_Pegleg</defName>
 		<graphicData>
-			<texPath>Mote/Footprint/Human/Pegleg/Red_Pegleg</texPath>
+			<!-- <texPath>Mote/Footprint/Human/Pegleg/Red_Pegleg</texPath> -->
+			<texPath>Mote/Footprint/Human/Pegleg/White_Pegleg</texPath>
+			<color>(131, 34, 34, 180)</color>
 		</graphicData>
 	</ThingDef>
 	
