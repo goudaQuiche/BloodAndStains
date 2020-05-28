@@ -4,7 +4,7 @@
 	<ThingDef Name="BNS_DeathPuddleBase" ParentName="MoteBase">
 		<defName>BNS_DeathPuddleBase</defName>
 		<graphicData>
-			<texPath>NullTex</texPath>
+			<texPath>Mote/Error</texPath>
 		</graphicData>
 		<altitudeLayer>MoteLow</altitudeLayer>
 		<mote>
