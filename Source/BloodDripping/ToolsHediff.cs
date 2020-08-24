@@ -16,8 +16,42 @@ namespace BloodDripping
         static List<string> footCustomLabel = new List<string> { "left foot", "right foot" };
         */
 
+        public static bool HasBionicParent(Pawn pawn, BodyPartRecord BPR)
+        {
+            List<BodyPartRecord> allParents = new List<BodyPartRecord>();
+
+            if (BPR.IsCorePart)
+                return false;
+
+            BodyPartRecord recursiveBPR = BPR.parent;
+
+            while (!recursiveBPR.IsCorePart)
+            {
+                if (!recursiveBPR.IsCorePart)
+                    allParents.Add(recursiveBPR);
+
+                recursiveBPR = recursiveBPR.parent;
+            }
+
+            if (allParents.NullOrEmpty())
+                return false;
+
+            Log.Warning("Found " + allParents.Count + " parent bpr");
+
+            foreach(BodyPartRecord curP in allParents)
+            {
+                IEnumerable<Hediff> hList = pawn.health.hediffSet.hediffs.Where(h => h.Part == curP && h.def.countsAsAddedPartOrImplant);
+                if (!hList.EnumerableNullOrEmpty())
+                    return true;
+            }
+
+            return false;
+        }
+
         public static Hediff HasRelevantHediff(this Pawn pawn, BodyPartDef BPDef, string customLabel, bool debug = false)
         {
+            Hediff priorityH = null;
+
             IEnumerable<BodyPartRecord> IEBpr = pawn.RaceProps.body.GetPartsWithDef(BPDef).Where(bpr => bpr.customLabel == customLabel);
             if (IEBpr.EnumerableNullOrEmpty())
             {
@@ -29,16 +63,32 @@ namespace BloodDripping
             foreach (HediffDef hDef in relevantHediffList)
             {
                 Hediff myH = null;
-                IEnumerable<Hediff> hList = pawn.health.hediffSet.hediffs.Where(h => h.Part == AimedBpr).Where(hD => hD.def == hDef);
+                IEnumerable<Hediff> hList = pawn.health.hediffSet.hediffs.Where(h => h.Part == AimedBpr && h.def == hDef);
                 if (hList.EnumerableNullOrEmpty())
                     continue;
 
-                if ((myH = hList.First()) != null)
-                    return myH;
+                if ((myH = hList.First()) == null)
+                    continue;
+
+                if(hDef == HediffDefOf.MissingBodyPart && HasBionicParent(pawn, AimedBpr))
+                {
+                    continue;
+                }
+
+                if (priorityH == null)
+                    priorityH = myH;
+                else
+                {
+                    if ((hDef == HediffDefOf.PegLeg || hDef == MyDefs.WoodenFootHediffDef) && priorityH.def == HediffDefOf.MissingBodyPart)
+                        priorityH = myH;
+                }
+
             }
 
-            Tools.Warn(pawn.LabelShort + " - no disability found", debug);
-            return null;
+            if (priorityH != null)
+                Tools.Warn(pawn.LabelShort + " disability found:" + priorityH.def.defName, debug);
+
+            return priorityH;
         }
 
         public static Hediff GetLeftLegFirstRelevantHediff(this Pawn pawn, bool debug = false)

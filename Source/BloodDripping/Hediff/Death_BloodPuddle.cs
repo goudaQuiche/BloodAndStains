@@ -4,13 +4,12 @@ using RimWorld;
 
 namespace BloodDripping
 {
-    // <deathActionWorkerClass>BloodDripping.DeathActionWorker_BloodPuddle</deathActionWorkerClass>
-    public class DeathActionWorker_BloodPuddle : DeathActionWorker
+    public static class UponDeath
 	{
-        bool myDebug = false;
+		public static void DeathPuddle(Corpse corpse)
+		{
+            bool myDebug = false;
 
-        public override void PawnDied(Corpse corpse)
-        {
             Tools.Warn(corpse.InnerPawn.LabelShort + " entering DeathActionWorker_BloodPuddle.PawnDied", myDebug);
 
             Hediff BloodDrippingHediff = ToolsPawn.Get_Human_BloodDripping(corpse.InnerPawn);
@@ -19,7 +18,7 @@ namespace BloodDripping
                 Tools.Warn("Could not find human bloodripping Hediff", myDebug);
                 // not human pawn
                 BloodDrippingHediff = ToolsPawn.Get_Custom_BloodDripping_Hediff(corpse.InnerPawn);
-                if (BloodDrippingHediff == null)
+                if(BloodDrippingHediff == null)
                 {
                     Tools.Warn("Could not find back up bloodripping Hediff: ", myDebug);
                     return;
@@ -36,7 +35,7 @@ namespace BloodDripping
             myDebug = hediffComp_BloodDripping.Props.debug;
 
             bool WasBleedingBeforeDeath = hediffComp_BloodDripping.WasBleeding;
-            Tools.Warn(corpse.InnerPawn.LabelShort + " was " + (WasBleedingBeforeDeath ? "" : "not ") + "bleeding before death", myDebug);
+            Tools.Warn(corpse.InnerPawn.LabelShort + " was "+(WasBleedingBeforeDeath?"":"not ")+"bleeding before death", myDebug);
 
             if (WasBleedingBeforeDeath)
                 hediffComp_BloodDripping.TryPlaceDeathMote();

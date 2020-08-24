@@ -38,6 +38,8 @@ namespace BloodDripping
         Hediff RightLegHediff = null;
         public bool availableDisabilityMotes = false;
 
+        int mySeed;
+
         readonly int FilthPerSteppedInItMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().FilthPerSteppedInItMultiplier;
         readonly int MaxFilthCarriedMultiplier = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().MaxFilthCarriedMultiplier;
         readonly bool RedFootprintOnlyIfInjured = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().RedFootprintOnlyIfInjured;
@@ -56,17 +58,18 @@ namespace BloodDripping
 
         public override void CompPostMake()
         {
+            Log.Warning("CompPostMake Init");
             Init();
         }
 
-        bool HasLeftLegHediff
+        bool HasLeftLegDisability
         {
             get
             {
                 return LeftLegHediff != null;
             }
         }
-        bool HasRightLegHediff
+        bool HasRightLegDisability
         {
             get
             {
@@ -103,14 +106,19 @@ namespace BloodDripping
                 return;
             }
 
-            if (Tools.TrueEvery30Sec)
+            //if (Tools.TrueEvery30Sec)
+            if (Tools.TrueEvery15SecPlusSeed(mySeed))
+            {
                 if (availableDisabilityMotes)
                 {
                     LeftLegHediff = myPawn.GetLeftLegFirstRelevantHediff(Props.debug);
                     RightLegHediff = myPawn.GetRightLegFirstRelevantHediff(Props.debug);
                 }
                 else
-                    Tools.Warn(myPawn.LabelShort + " - Disability motes are disabled, no disability mote update", Props.debug);
+                    Tools.Warn(myPawn.LabelShort + " - Disability motes are disabled, no disability mote update", Prefs.DevMode);
+                //Tools.Warn(myPawn.LabelShort + " - Disability motes are disabled, no disability mote update", Props.debug);
+            }
+                
 
             if (myPawn.IsLaying())
             {
@@ -132,13 +140,13 @@ namespace BloodDripping
                 if (TerrainAllowsPuddle(myPawn))
                 {
                     string moteName = string.Empty;
-                    if (HasDisabilityHediff && availableDisabilityMotes)
+                    if (HasDisability && availableDisabilityMotes)
                         moteName = (lastFootprintRight ? moteRightFootprintDef?.defName : moteLeftFootprintDef?.defName);
                     else
                         moteName = moteFootprintDef?.defName;
                     Tools.Warn(myPawn.LabelShort + " trying to place bloody " + (Props.trailLikeFootprint ? "trail" : "foot print") + ": " + moteName, Props.debug);
 
-                    this.TryPlaceFootprint(Props.trailLikeFootprint);
+                    this.TryPlaceFootprint();
                     lastDrawnFootprintCell = myPawn.Position;
                 }
 
@@ -159,11 +167,11 @@ namespace BloodDripping
                 return (Props.leftFootRotation != 0 || Props.rightFootRotation != 0);
             }
         }
-        public bool HasDisabilityHediff
+        public bool HasDisability
         {
             get
             {
-                return HasLeftLegHediff || HasRightLegHediff;
+                return HasLeftLegDisability || HasRightLegDisability;
             }
         }
 
@@ -186,15 +194,15 @@ namespace BloodDripping
                             stainedLengthTicks += LengthPerBloodFilth * FilthPerSteppedInItMultiplier;
 
                             moteFootprintDef = curFP.moteDef;
-                            if (Props.disabilityFootprints && availableDisabilityMotes && HasDisabilityHediff)
+                            if (Props.disabilityFootprints && availableDisabilityMotes && HasDisability)
                             {
                                 moteLeftFootprintDef = moteRightFootprintDef = moteFootprintDef;
-                                if (HasLeftLegHediff)
+                                if (HasLeftLegDisability)
                                     moteLeftFootprintDef = this.RegularMoteToDisabilityHediffMote(LeftLegHediff, curFP.moteDef, Props.debug);
-                                if (HasRightLegHediff)
+                                if (HasRightLegDisability)
                                     moteRightFootprintDef = this.RegularMoteToDisabilityHediffMote(RightLegHediff, curFP.moteDef, Props.debug);
 
-                                Tools.Warn(myPawn.LabelShort + " has disability: " + HasDisabilityHediff + " - Left: " + LeftLegHediff?.def.defName + "; Right: " + RightLegHediff?.def.defName, Props.debug);
+                                Tools.Warn(myPawn.LabelShort + " has disability: " + HasDisability + " - Left: " + LeftLegHediff?.def.defName + "; Right: " + RightLegHediff?.def.defName, Props.debug);
                                 Tools.Warn(myPawn.LabelShort + " motes: Left: " + moteLeftFootprintDef?.defName + "; Right: " + moteRightFootprintDef?.defName, Props.debug);
                             }
 
@@ -313,6 +321,7 @@ namespace BloodDripping
                 ticksUntilFootPrint = (int)(Props.period / (myPawn.GetStatValue(StatDefOf.MoveSpeed) / MyDefs.HumanSpeed));
 
             lastCell = myPawn.Position;
+            mySeed = myPawn.thingIDNumber % 60;
 
             Tools.Warn(myPawn.LabelShort+" passed " + Def.defName + " Init()\n--------", Props.debug);
 
@@ -343,17 +352,25 @@ namespace BloodDripping
             {
                 string result = string.Empty;
 
-                if (Props.debug)
+                //if (Props.debug)
+                if (Prefs.DevMode)
                 {
                     result += "IsBloodStained: " + IsStained
                     + "\n moteSaturated" + myMap.moteCounter.SaturatedLowPriority
-                    + "\n "+DumpTriggeringFilths();
+                    + "\n " + DumpTriggeringFilths();
 
                     if (IsStained)
                         result +=
                         "\n BloodStainedLengthTicks: " + stainedLengthTicks
                         + "\n Ticks: " + footPrintTicksLeft + "/" + ticksUntilFootPrint
                         + "\n MoteFootprint: " + moteFootprintDef?.defName;
+
+                    if (HasDisability)
+                    {
+                        result +=
+                            "\n availableDisability: " + availableDisabilityMotes +
+                            "\n leftleg: " + HasLeftLegDisability + "; rightleg:" + HasRightLegDisability;
+                    }
                 }
 
                 return result;

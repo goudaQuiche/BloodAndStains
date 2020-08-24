@@ -62,12 +62,13 @@
     <Compile Include="HediffGiverCustomRace\CustomRace_HediffGiver_BloodDripping.cs" />
     <Compile Include="HediffGiverCustomRace\CustomRace_HediffGiver_Stain_Footprint.cs" />
     <Compile Include="GfxEffects.cs" />
-    <Compile Include="CompProperties\HediffCompProperties_BloodDripping.cs" />
-    <Compile Include="CompProperties\HediffCompProperties_Stain_Footprint.cs" />
-    <Compile Include="Comp\HediffComp_BloodDripping.cs" />
-    <Compile Include="Comp\HediffComp_Stain_Footprint.cs" />
+    <Compile Include="Hediff\CompProperties\HediffCompProperties_BloodDripping.cs" />
+    <Compile Include="Hediff\CompProperties\HediffCompProperties_Stain_Footprint.cs" />
+    <Compile Include="Hediff\Comp\HediffComp_BloodDripping.cs" />
+    <Compile Include="Hediff\Comp\HediffComp_Stain_Footprint.cs" />
     <Compile Include="HediffGiverHuman\Human_HediffGiver_BloodDripping.cs" />
     <Compile Include="HediffGiverHuman\Human_HediffGiver_Stain_Footprint.cs" />
+    <Compile Include="Hediff\Death_BloodPuddle.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="MyDefs.cs" />
     <Compile Include="MyGfx.cs" />

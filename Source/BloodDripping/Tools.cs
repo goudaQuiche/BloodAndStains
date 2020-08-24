@@ -39,6 +39,11 @@ namespace BloodDripping
             }
         }
 
+        public static bool TrueEvery15SecPlusSeed(int seed)
+        {
+            return TrueEveryNTicks(900 + seed);
+        }
+
         public static void Warn(string warning, bool debug = false)
         {
             if(debug)

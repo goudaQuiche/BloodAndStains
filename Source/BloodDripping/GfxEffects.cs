@@ -34,8 +34,9 @@ namespace BloodDripping
             GenSpawn.Spawn(moteThrown, loc.ToIntVec3(), map, WipeMode.Vanish);
         }
 
-        public static void TryPlaceFootprint(this HediffComp_Stain_Footprint h, bool trailLike = false, bool debug = false)
+        public static void TryPlaceFootprint(this HediffComp_Stain_Footprint h, bool debug = false)
         {
+            bool trailLike = h.Props.trailLikeFootprint;
 
             Vector3 drawPos = h.myPawn.Drawer.DrawPos;
             Vector3 normalized = (drawPos - h.lastFootprintPlacePos).normalized;
@@ -44,7 +45,7 @@ namespace BloodDripping
             Tools.Warn("base rotation: " + rot, debug);
 
             ThingDef myMoteDef = h.moteFootprintDef;
-            if (h.Props.disabilityFootprints && h.availableDisabilityMotes && h.HasDisabilityHediff)
+            if (h.Props.disabilityFootprints && h.availableDisabilityMotes && h.HasDisability)
                 myMoteDef = h.lastFootprintRight ? h.moteRightFootprintDef : h.moteLeftFootprintDef;
 
             if(h.HasRotation)

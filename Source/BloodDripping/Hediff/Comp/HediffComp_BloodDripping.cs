@@ -58,6 +58,13 @@ namespace BloodDripping
             return !(terrain == null);
         }
 
+        public override void Notify_PawnDied()
+        {
+            base.Notify_PawnDied();
+
+            UponDeath.DeathPuddle(myPawn.Corpse);
+        }
+
         public bool IsBleeding
         {
             get
