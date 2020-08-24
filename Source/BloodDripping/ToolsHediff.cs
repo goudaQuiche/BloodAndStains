@@ -36,7 +36,7 @@ namespace BloodDripping
             if (allParents.NullOrEmpty())
                 return false;
 
-            Log.Warning("Found " + allParents.Count + " parent bpr");
+            //Log.Warning("Found " + allParents.Count + " parent bpr");
 
             foreach(BodyPartRecord curP in allParents)
             {
