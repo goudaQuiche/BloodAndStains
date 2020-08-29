@@ -58,7 +58,7 @@ namespace BloodDripping
 
         public override void CompPostMake()
         {
-            Log.Warning("CompPostMake Init");
+            //Log.Warning("CompPostMake Init");
             Init();
         }
 
