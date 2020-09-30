@@ -38,7 +38,7 @@ namespace BloodDripping
         {
             bool trailLike = h.Props.trailLikeFootprint;
 
-            Vector3 drawPos = h.myPawn.Drawer.DrawPos;
+            Vector3 drawPos = h.Pawn.Drawer.DrawPos;
             Vector3 normalized = (drawPos - h.lastFootprintPlacePos).normalized;
             float rot = normalized.AngleFlat();
 
@@ -64,7 +64,7 @@ namespace BloodDripping
             if (!trailLike)
                 angle = (!h.lastFootprintRight) ? -90 : 90;
 
-            Vector3 b = normalized.RotatedBy(angle) * 0.17f * Mathf.Sqrt(h.myPawn.BodySize);
+            Vector3 b = normalized.RotatedBy(angle) * 0.17f * Mathf.Sqrt(h.Pawn.BodySize);
             Vector3 vector = drawPos + FootprintOffset + b;
             IntVec3 c = vector.ToIntVec3();
 

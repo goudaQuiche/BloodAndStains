@@ -14,7 +14,7 @@ namespace BloodDripping
 {
     public class HediffComp_Stain_Footprint : HediffComp
     {
-        public Pawn myPawn = null;
+        //public Pawn myPawn = null;
         public Map myMap = null;
 
         public ThingDef moteFootprintDef = null;
@@ -47,14 +47,18 @@ namespace BloodDripping
         readonly bool SafeRemoval = LoadedModManager.GetMod<BloodDrippingMod>().GetSettings<BloodDripping_Settings>().SafeRemoval;
 
         bool shouldSkip = false;
+        bool IsInitialized = false;
 
-        public HediffCompProperties_Stain_Footprint Props
-        {
-            get
-            {
-                return (HediffCompProperties_Stain_Footprint)props;
-            }
-        }
+        public HediffCompProperties_Stain_Footprint Props => (HediffCompProperties_Stain_Footprint)props;
+        bool MyDebug => Props.debug;
+
+        bool HasLeftLegDisability => LeftLegHediff != null;
+        bool HasRightLegDisability => RightLegHediff != null;
+        public bool HasDisability => HasLeftLegDisability || HasRightLegDisability;
+
+        public bool HasRotation => Props.leftFootRotation != 0 || Props.rightFootRotation != 0;
+
+        private bool IsStained => stainedLengthTicks > 0;
 
         public override void CompPostMake()
         {
@@ -62,24 +66,9 @@ namespace BloodDripping
             Init();
         }
 
-        bool HasLeftLegDisability
-        {
-            get
-            {
-                return LeftLegHediff != null;
-            }
-        }
-        bool HasRightLegDisability
-        {
-            get
-            {
-                return RightLegHediff != null;
-            }
-        }
-
         public override void CompPostTick(ref float severityAdjustment)
         {
-            if (myPawn == null)
+            if (!IsInitialized)
                 Init();
 
             if (shouldSkip)
@@ -87,22 +76,22 @@ namespace BloodDripping
 
             if (myMap.moteCounter.SaturatedLowPriority)
             {
-                Tools.Warn(myPawn?.LabelShort + "mote Counter Saturated", Props.debug);
+                Tools.Warn(Pawn?.LabelShort + "mote Counter Saturated", MyDebug);
                 return;
             }
 
-            if (!myPawn.Spawned)
+            if (!Pawn.Spawned)
             {
-                Tools.Warn("unspawned pawn", Props.debug);
+                Tools.Warn("unspawned pawn", MyDebug);
                 return;
             }
 
             if (
-                RedFootprintOnlyIfInjured && !myPawn.IsBleeding() &&
+                RedFootprintOnlyIfInjured && !Pawn.IsBleeding() &&
                 (moteFootprintDef == MyDefs.HumanBloodyFootprint) || (moteFootprintDef == MyDefs.HumanBloodyPegleg) || (moteFootprintDef == MyDefs.HumanBloodyWoodenfoot)
                 )
             {
-                Tools.Warn(myPawn.LabelShort + " wont footprint : Modsetting + uninjured + HumanBloodyFootprint", Props.debug);
+                Tools.Warn(Pawn.LabelShort + " wont footprint : Modsetting + uninjured + HumanBloodyFootprint", MyDebug);
                 return;
             }
 
@@ -111,43 +100,43 @@ namespace BloodDripping
             {
                 if (availableDisabilityMotes)
                 {
-                    LeftLegHediff = myPawn.GetLeftLegFirstRelevantHediff(Props.debug);
-                    RightLegHediff = myPawn.GetRightLegFirstRelevantHediff(Props.debug);
+                    LeftLegHediff = Pawn.GetLeftLegFirstRelevantHediff(MyDebug);
+                    RightLegHediff = Pawn.GetRightLegFirstRelevantHediff(MyDebug);
                 }
                 else
-                    Tools.Warn(myPawn.LabelShort + " - Disability motes are disabled, no disability mote update", Prefs.DevMode);
+                    Tools.Warn(Pawn.LabelShort + " - Disability motes are disabled, no disability mote update", Prefs.DevMode && MyDebug);
                 //Tools.Warn(myPawn.LabelShort + " - Disability motes are disabled, no disability mote update", Props.debug);
             }
-                
 
-            if (myPawn.IsLaying())
+            if (Pawn.IsLaying())
             {
-                Tools.Warn(myPawn.LabelShort + " is laying, wont footprint", Props.debug);
+                Tools.Warn(Pawn.LabelShort + " is laying, wont footprint", MyDebug);
                 return;
             }
 
-            if (myPawn.Position == lastCell)
+            //if (myPawn.Position == lastCell)
+            if (Pawn.Position != lastCell)
             {
                 CellScan();
             }
-            lastCell = myPawn.Position;
+            lastCell = Pawn.Position;
 
-            if (!IsStained || lastDrawnFootprintCell == myPawn.Position)
+            if (!IsStained || lastDrawnFootprintCell == Pawn.Position)
                 return;
 
             if (footPrintTicksLeft <= 0)
             {
-                if (TerrainAllowsPuddle(myPawn))
+                if (TerrainAllowsPuddle(Pawn))
                 {
                     string moteName = string.Empty;
                     if (HasDisability && availableDisabilityMotes)
                         moteName = (lastFootprintRight ? moteRightFootprintDef?.defName : moteLeftFootprintDef?.defName);
                     else
                         moteName = moteFootprintDef?.defName;
-                    Tools.Warn(myPawn.LabelShort + " trying to place bloody " + (Props.trailLikeFootprint ? "trail" : "foot print") + ": " + moteName, Props.debug);
+                    Tools.Warn(Pawn.LabelShort + " trying to place bloody " + (Props.trailLikeFootprint ? "trail" : "foot print") + ": " + moteName, MyDebug);
 
                     this.TryPlaceFootprint();
-                    lastDrawnFootprintCell = myPawn.Position;
+                    lastDrawnFootprintCell = Pawn.Position;
                 }
 
                 Reset();
@@ -160,24 +149,13 @@ namespace BloodDripping
             stainedLengthTicks--;
 
         }
-        public bool HasRotation
-        {
-            get
-            {
-                return (Props.leftFootRotation != 0 || Props.rightFootRotation != 0);
-            }
-        }
-        public bool HasDisability
-        {
-            get
-            {
-                return HasLeftLegDisability || HasRightLegDisability;
-            }
-        }
 
         private void CellScan()
         {
-            List<Thing> thingList = myPawn.Position.GetThingList(myMap);
+            if (myMap == null || !Pawn.Position.InBounds(myMap))
+                return;
+
+            List<Thing> thingList = Pawn.Position.GetThingList(myMap);
             for (int i = 0; i < thingList.Count; i++)
             {
                 Thing curT = thingList[i];
@@ -198,12 +176,12 @@ namespace BloodDripping
                             {
                                 moteLeftFootprintDef = moteRightFootprintDef = moteFootprintDef;
                                 if (HasLeftLegDisability)
-                                    moteLeftFootprintDef = this.RegularMoteToDisabilityHediffMote(LeftLegHediff, curFP.moteDef, Props.debug);
+                                    moteLeftFootprintDef = this.RegularMoteToDisabilityHediffMote(LeftLegHediff, curFP.moteDef, MyDebug);
                                 if (HasRightLegDisability)
-                                    moteRightFootprintDef = this.RegularMoteToDisabilityHediffMote(RightLegHediff, curFP.moteDef, Props.debug);
+                                    moteRightFootprintDef = this.RegularMoteToDisabilityHediffMote(RightLegHediff, curFP.moteDef, MyDebug);
 
-                                Tools.Warn(myPawn.LabelShort + " has disability: " + HasDisability + " - Left: " + LeftLegHediff?.def.defName + "; Right: " + RightLegHediff?.def.defName, Props.debug);
-                                Tools.Warn(myPawn.LabelShort + " motes: Left: " + moteLeftFootprintDef?.defName + "; Right: " + moteRightFootprintDef?.defName, Props.debug);
+                                Tools.Warn(Pawn.LabelShort + " has disability: " + HasDisability + " - Left: " + LeftLegHediff?.def.defName + "; Right: " + RightLegHediff?.def.defName, Props.debug);
+                                Tools.Warn(Pawn.LabelShort + " motes: Left: " + moteLeftFootprintDef?.defName + "; Right: " + moteRightFootprintDef?.defName, MyDebug);
                             }
 
                             break;
@@ -220,16 +198,9 @@ namespace BloodDripping
 
         public bool TerrainAllowsPuddle(Pawn pawn)
         {
-            TerrainDef terrain = myPawn.Position.GetTerrain(myMap);
+            TerrainDef terrain = Pawn.Position.GetTerrain(myMap);
             //return (terrain == null || terrain.IsWater || myPawn.Map.snowGrid.GetDepth(myPawn.Position) >= 0.4f);
             return !(terrain == null || terrain.IsWater);
-        }
-        private bool IsStained
-        {
-            get
-            {
-                return (stainedLengthTicks > 0);
-            }
         }
 
         bool CheckBaseConf
@@ -243,23 +214,23 @@ namespace BloodDripping
 
                     return false;
                 }
-                else Tools.Warn("race set to: " + Props.race, Props.debug);
+                else Tools.Warn("race set to: " + Props.race, MyDebug);
 
                 if (Props.footprint.NullOrEmpty())
                 {
-                    Tools.Warn("no Footprint Def found, destroying hediff", Props.debug);
+                    Tools.Warn("no Footprint Def found, destroying hediff", MyDebug);
                     return false;
                 }
-                else Tools.Warn("set footprint number: " + Props.footprint.Count, Props.debug);
+                else Tools.Warn("set footprint number: " + Props.footprint.Count, MyDebug);
 
                 foreach (Footprint curFP in Props.footprint)
                 {
                     if (curFP.triggerOnFilthDef.NullOrEmpty())
                     {
-                        Tools.Warn("no Filth Def found in " + curFP.defName, Props.debug);
+                        Tools.Warn("no Filth Def found in " + curFP.defName, MyDebug);
                         return false;
                     }
-                    else Tools.Warn("Found: " + curFP.defName, Props.debug);
+                    else Tools.Warn("Found: " + curFP.defName, MyDebug);
                 }
 
                 return true;
@@ -270,15 +241,15 @@ namespace BloodDripping
         {
             if (!Props.peglegMote_pattern.NullOrEmpty() && !Props.woodenfootMote_pattern.NullOrEmpty() && !Props.missingPartMote_pattern.NullOrEmpty())
             {
-                availableDisabilityMotes = this.CheckDisabilityMotes(Props.debug);
+                availableDisabilityMotes = this.CheckDisabilityMotes(MyDebug);
             }
-            Tools.Warn("Trying to disability footprints: "+ Props.disabilityFootprints + " - Available disability motes: " + availableDisabilityMotes, Props.debug);
+            Tools.Warn("Trying to disability footprints: "+ Props.disabilityFootprints + " - Available disability motes: " + availableDisabilityMotes, MyDebug);
         }
 
         public void Init()
         {
-            myPawn = parent.pawn;
-            myMap = myPawn.Map;
+            //myPawn = parent.pawn;
+            myMap = Pawn.Map;
 
             if (SafeRemoval)
             {
@@ -291,7 +262,7 @@ namespace BloodDripping
 
             if (myMap == null)
             {
-                Tools.Warn("pawn is not on map anymore", Props.debug);
+                Tools.Warn("pawn is not on map anymore", MyDebug);
                 parent.Severity = 0;
                 shouldSkip = true;
                 return;
@@ -309,28 +280,30 @@ namespace BloodDripping
                 CheckDisabilitiesConf();
                 if (availableDisabilityMotes)
                 {
-                    LeftLegHediff = myPawn.GetLeftLegFirstRelevantHediff(Props.debug);
-                    RightLegHediff = myPawn.GetRightLegFirstRelevantHediff(Props.debug);
+                    LeftLegHediff = Pawn.GetLeftLegFirstRelevantHediff(MyDebug);
+                    RightLegHediff = Pawn.GetRightLegFirstRelevantHediff(MyDebug);
                 }
             }
                 
 
-            if (myPawn.GetStatValue(StatDefOf.MoveSpeed) < MyDefs.HumanSpeed)
+            if (Pawn.GetStatValue(StatDefOf.MoveSpeed) < MyDefs.HumanSpeed)
                 ticksUntilFootPrint = Props.period;
             else
-                ticksUntilFootPrint = (int)(Props.period / (myPawn.GetStatValue(StatDefOf.MoveSpeed) / MyDefs.HumanSpeed));
+                ticksUntilFootPrint = (int)(Props.period / (Pawn.GetStatValue(StatDefOf.MoveSpeed) / MyDefs.HumanSpeed));
 
-            lastCell = myPawn.Position;
-            mySeed = myPawn.thingIDNumber % 60;
+            lastCell = Pawn.Position;
+            mySeed = Pawn.thingIDNumber % 60;
 
-            Tools.Warn(myPawn.LabelShort+" passed " + Def.defName + " Init()\n--------", Props.debug);
+            IsInitialized = true;
+
+            Tools.Warn(Pawn.LabelShort+" passed " + Def.defName + " Init()\n--------", MyDebug);
 
         }
 
         void Reset()
         {
             footPrintTicksLeft = ticksUntilFootPrint;
-            if (myPawn.Drafted)
+            if (Pawn.Drafted)
                 footPrintTicksLeft /= 2;
         }
 
