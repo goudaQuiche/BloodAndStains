@@ -62,7 +62,8 @@ namespace BloodDripping
         {
             base.Notify_PawnDied();
 
-            UponDeath.DeathPuddle(myPawn.Corpse);
+            if (myPawn.Corpse != null && myPawn.Corpse.Spawned && myPawn.Corpse.Map != null)
+                UponDeath.DeathPuddle(myPawn.Corpse);
         }
 
         public bool IsBleeding

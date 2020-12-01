@@ -10,6 +10,12 @@ namespace BloodDripping
 		{
             bool myDebug = false;
 
+            if (corpse == null || corpse.Map == null || !corpse.Spawned)
+            {
+                Tools.Warn("DeathPuddle - no corpse", myDebug);
+                return;
+            }
+
             Tools.Warn(corpse.InnerPawn.LabelShort + " entering DeathActionWorker_BloodPuddle.PawnDied", myDebug);
 
             Hediff BloodDrippingHediff = ToolsPawn.Get_Human_BloodDripping(corpse.InnerPawn);
