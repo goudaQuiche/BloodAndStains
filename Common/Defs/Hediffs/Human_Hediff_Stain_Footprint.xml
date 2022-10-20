@@ -27,6 +27,8 @@
 		<description>human footprints</description>
 		<label>Stain_Footprint.human</label>
 		
+		<isBad>false</isBad>
+		
 		<comps>
 			<li Class="BloodDripping.HediffCompProperties_Stain_Footprint">
 				<race>Human</race>

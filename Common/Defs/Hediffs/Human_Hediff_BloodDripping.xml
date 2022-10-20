@@ -41,6 +41,8 @@
 		<description>human blood puddles</description>
 		<label>BloodDripping.redBlood</label>
 		
+		<isBad>false</isBad>
+		
 		<comps>
 			<li Class="BloodDripping.HediffCompProperties_BloodDripping">
 				<race>Human</race>
